@@ -1,0 +1,5 @@
+{
+  "name": "Kiểm toán viên cao cấp",
+  "description": "Xem báo cáo + CMS",
+  "permissionIds": [4, 5]
+}

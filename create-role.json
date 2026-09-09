@@ -1,0 +1,5 @@
+{
+  "name": "Kiểm toán viên",
+  "description": "Chỉ xem báo cáo và lịch sử audit",
+  "permissionIds": [4]
+}

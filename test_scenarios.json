@@ -1,0 +1,304 @@
+{
+  "project": "Vietcombank Digital Banking & Admin Management System",
+  "version": "1.0.0",
+  "generatedDate": "2026-09-09",
+  "author": "QA & Engineering Team",
+  "summary": {
+    "totalTestCases": 24,
+    "modules": [
+      "AUTHENTICATION_2FA",
+      "CUSTOMER_PORTAL",
+      "RBAC_SECURITY",
+      "LOAN_APPROVAL",
+      "STAFF_OPERATIONS",
+      "FINANCIAL_RATES_CMS",
+      "CHATBOT_PUBLIC_WEB",
+      "AUDIT_REPORTS"
+    ],
+    "environment": {
+      "backendUrl": "http://localhost:8080/api/v1",
+      "frontendAdminUrl": "http://localhost:5173",
+      "frontendCustomerUrl": "http://localhost:5173/#/customer/login",
+      "database": "admin_portal_db (MySQL 8.0+)"
+    }
+  },
+  "testCases": [
+    {
+      "id": "TC-AUTH-01",
+      "module": "AUTHENTICATION_2FA",
+      "title": "Đăng nhập 2 bước cán bộ quản trị - Bước 1 lấy OTP thành công",
+      "type": "FUNCTIONAL",
+      "priority": "CRITICAL",
+      "role": "ADMIN",
+      "preConditions": "Tài khoản admin_super đang hoạt động (is_active = 1)",
+      "endpoint": "POST /api/v1/auth/login",
+      "testData": {
+        "username": "admin_super",
+        "password": "Admin@123"
+      },
+      "expectedResult": "HTTP 200 OK. Trả về tempToken và chuỗi 6 chữ số devOtp (trong môi trường DEV). Bước này CHƯA cấp JWT accessToken.",
+      "uiBehavior": "Giao diện chuyển từ Form mật khẩu sang Form nhập OTP. Ô nhập OTP để trống và hiện thông báo chứa mã OTP dev để người dùng tự nhập tay."
+    },
+    {
+      "id": "TC-AUTH-02",
+      "module": "AUTHENTICATION_2FA",
+      "title": "Xác thực OTP thủ công - Đăng nhập hoàn tất nhận JWT",
+      "type": "FUNCTIONAL",
+      "priority": "CRITICAL",
+      "role": "ADMIN",
+      "preConditions": "Đã hoàn thành TC-AUTH-01 và có tempToken hợp lệ",
+      "endpoint": "POST /api/v1/auth/verify-otp",
+      "testData": {
+        "username": "admin_super",
+        "tempToken": "{{tempToken}}",
+        "otpCode": "{{devOtp}}"
+      },
+      "expectedResult": "HTTP 200 OK. Trả về accessToken JWT, refreshToken và danh sách vai trò ['ROLE_ADMIN'].",
+      "uiBehavior": "Lưu token vào LocalStorage/SessionStorage, chuyển hướng thẳng vào trang Dashboard (/dashboard)."
+    },
+    {
+      "id": "TC-AUTH-03",
+      "module": "AUTHENTICATION_2FA",
+      "title": "Nhập sai mã OTP - Bị từ chối xác thực",
+      "type": "NEGATIVE",
+      "priority": "HIGH",
+      "role": "STAFF",
+      "preConditions": "Đã hoàn thành bước 1, có tempToken",
+      "endpoint": "POST /api/v1/auth/verify-otp",
+      "testData": {
+        "username": "admin_super",
+        "tempToken": "{{tempToken}}",
+        "otpCode": "999999"
+      },
+      "expectedResult": "HTTP 400 Bad Request hoặc 401 Unauthorized. Thông báo lỗi: 'Mã OTP không chính xác hoặc đã hết hạn'.",
+      "uiBehavior": "Hiện toast thông báo lỗi màu đỏ, người dùng vẫn ở lại form nhập OTP để nhập lại."
+    },
+    {
+      "id": "TC-RBAC-01",
+      "module": "RBAC_SECURITY",
+      "title": "Kiểm tra quyền Admin truy cập danh mục Quản trị người dùng",
+      "type": "SECURITY_POSITIVE",
+      "priority": "CRITICAL",
+      "role": "ADMIN",
+      "preConditions": "Đăng nhập bằng tài khoản admin_super, có token JWT của Admin",
+      "endpoint": "GET /api/v1/system/users",
+      "headers": {
+        "Authorization": "Bearer {{admin_token}}"
+      },
+      "expectedResult": "HTTP 200 OK. Trả về toàn bộ danh sách cán bộ nhân viên và trạng thái tài khoản.",
+      "uiBehavior": "Truy cập được menu 'Quản trị hệ thống' -> 'Người dùng & Phân quyền'."
+    },
+    {
+      "id": "TC-RBAC-02",
+      "module": "RBAC_SECURITY",
+      "title": "BẢO MẬT: Nhân viên quản lý phê duyệt gọi API Quản trị người dùng -> Phải bị chặn 403 Forbidden",
+      "type": "SECURITY_NEGATIVE",
+      "priority": "BLOCKER",
+      "role": "MANAGER",
+      "preConditions": "Đăng nhập bằng tài khoản ql_minhtuan (ROLE_MANAGER)",
+      "endpoint": "GET /api/v1/system/users",
+      "headers": {
+        "Authorization": "Bearer {{manager_token}}"
+      },
+      "expectedResult": "HTTP 403 FORBIDDEN. Backend Spring Security bắt @PreAuthorize('hasRole(\"ADMIN\")') và chặn triệt để.",
+      "uiBehavior": "Thanh sidebar của Quản lý phê duyệt KHÔNG HIỂN THỊ menu Quản trị hệ thống/Người dùng. Nếu cố gõ URL trực tiếp, màn hình hiển thị 403 Access Denied."
+    },
+    {
+      "id": "TC-CUST-01",
+      "module": "CUSTOMER_PORTAL",
+      "title": "Đăng ký tài khoản Khách hàng cá nhân trực tuyến",
+      "type": "FUNCTIONAL",
+      "priority": "HIGH",
+      "role": "CUSTOMER_INDIVIDUAL",
+      "preConditions": "Số CCCD và số điện thoại chưa tồn tại trong hệ thống",
+      "endpoint": "POST /api/v1/customer/auth/register/individual",
+      "testData": {
+        "username": "kh_minhtriet",
+        "password": "Customer@123",
+        "fullName": "Lê Minh Triết",
+        "idCardNumber": "079095001234",
+        "phoneNumber": "0933112233",
+        "email": "triet.le@gmail.com",
+        "monthlyIncome": 35000000
+      },
+      "expectedResult": "HTTP 201 Created hoặc 200 OK. Tạo thành công bản ghi trong bảng users và customer_profiles.",
+      "uiBehavior": "Thông báo đăng ký tài khoản thành công, tự động chuyển về trang đăng nhập Khách hàng."
+    },
+    {
+      "id": "TC-CUST-02",
+      "module": "CUSTOMER_PORTAL",
+      "title": "Đăng nhập Cổng Khách hàng Cá nhân (kh_thuha)",
+      "type": "FUNCTIONAL",
+      "priority": "HIGH",
+      "role": "CUSTOMER_INDIVIDUAL",
+      "preConditions": "Tài khoản kh_thuha đã được tạo",
+      "endpoint": "POST /api/v1/customer/auth/login",
+      "testData": {
+        "username": "kh_thuha",
+        "password": "Customer@123"
+      },
+      "expectedResult": "HTTP 200 OK. Trả về customerToken và thông tin cá nhân của khách hàng.",
+      "uiBehavior": "Vào Dashboard khách hàng cá nhân hiển thị số dư, danh mục sản phẩm, gợi ý gói vay."
+    },
+    {
+      "id": "TC-LOAN-01",
+      "module": "CUSTOMER_PORTAL",
+      "title": "Khách hàng nộp hồ sơ Vay Mua Ô Tô thế chấp bằng xe",
+      "type": "FUNCTIONAL",
+      "priority": "HIGH",
+      "role": "CUSTOMER_INDIVIDUAL",
+      "preConditions": "Khách hàng đã đăng nhập (kh_namle hoặc kh_thuha)",
+      "endpoint": "POST /api/v1/customer/loans/auto",
+      "headers": {
+        "Authorization": "Bearer {{customer_token}}"
+      },
+      "testData": {
+        "loanAmount": 500000000,
+        "loanTermMonths": 60,
+        "carBrand": "Toyota",
+        "carModel": "Camry 2.5Q 2026",
+        "manufactureYear": 2026,
+        "carPrice": 1400000000,
+        "isNewCar": true,
+        "estimatedCollateralValue": 1400000000
+      },
+      "expectedResult": "HTTP 200 OK. Tạo hồ sơ vay với trạng thái 'PENDING' (Chờ thẩm định), sinh mã hồ sơ ví dụ APP-AUTO-202609-01.",
+      "uiBehavior": "Hiển thị trang xác nhận nộp hồ sơ thành công và xuất hiện trong mục 'Hồ sơ của tôi'."
+    },
+    {
+      "id": "TC-APPR-01",
+      "module": "LOAN_APPROVAL",
+      "title": "Cán bộ Quản lý phê duyệt kiểm tra chi tiết hồ sơ vay vốn ô tô",
+      "type": "FUNCTIONAL",
+      "priority": "CRITICAL",
+      "role": "MANAGER",
+      "preConditions": "Đăng nhập tài khoản ql_minhtuan, có hồ sơ mã 1001",
+      "endpoint": "GET /api/v1/approvals/applications/1001",
+      "headers": {
+        "Authorization": "Bearer {{manager_token}}"
+      },
+      "expectedResult": "HTTP 200 OK. Trả về đầy đủ thông tin khách hàng, số tiền vay 500.000.000 VNĐ, tài sản đảm bảo chi tiết (Hãng xe, Dòng xe, Giá trị xe, Tỷ lệ vay/LTV).",
+      "uiBehavior": "Hiển thị Drawer chi tiết hồ sơ với thẻ định giá xe màu xanh lá, bảng tiến độ trả nợ dự kiến."
+    },
+    {
+      "id": "TC-APPR-02",
+      "module": "LOAN_APPROVAL",
+      "title": "Quản lý ra quyết định Phê duyệt giải ngân hồ sơ vay",
+      "type": "FUNCTIONAL",
+      "priority": "CRITICAL",
+      "role": "MANAGER",
+      "preConditions": "Hồ sơ đang ở trạng thái PENDING hoặc UNDER_REVIEW",
+      "endpoint": "POST /api/v1/approvals/applications/1001/action",
+      "headers": {
+        "Authorization": "Bearer {{manager_token}}"
+      },
+      "testData": {
+        "action": "APPROVED",
+        "reasonNote": "Khách hàng có thu nhập ổn định 45 triệu/tháng, tài sản ô tô mới 100%, hồ sơ đầy đủ."
+      },
+      "expectedResult": "HTTP 200 OK. Cập nhật trạng thái hồ sơ thành 'APPROVED', lưu lịch sử phê duyệt và tên người duyệt vào audit log.",
+      "uiBehavior": "Trạng thái đổi sang tag màu xanh 'ĐÃ DUYỆT'. Gửi thông báo đến tài khoản khách hàng."
+    },
+    {
+      "id": "TC-STAFF-01",
+      "module": "STAFF_OPERATIONS",
+      "title": "Giao dịch viên lập lệnh chuyển tiền tại quầy",
+      "type": "FUNCTIONAL",
+      "priority": "HIGH",
+      "role": "STAFF",
+      "preConditions": "Tài khoản nhân viên nv_hoangnam đăng nhập thành công",
+      "endpoint": "POST /api/v1/staff/transactions",
+      "headers": {
+        "Authorization": "Bearer {{staff_token}}"
+      },
+      "testData": {
+        "senderCustomerId": 501,
+        "receiverAccountNumber": "0011002233445",
+        "receiverName": "Vũ Đình Trọng",
+        "bankName": "INTERNAL",
+        "amount": 25000000,
+        "fee": 0,
+        "description": "Nộp tiền mặt chuyển khoản vào tài khoản"
+      },
+      "expectedResult": "HTTP 200 OK. Tạo mã giao dịch TXN-20260909-01, cập nhật biến động số dư và in phiếu giao dịch.",
+      "uiBehavior": "Giao diện hiện Modal in ủy nhiệm chi / biên lai chuyển tiền thành công."
+    },
+    {
+      "id": "TC-STAFF-02",
+      "module": "STAFF_OPERATIONS",
+      "title": "Tiếp nhận và giải quyết yêu cầu tra soát khiếu nại ATM",
+      "type": "FUNCTIONAL",
+      "priority": "MEDIUM",
+      "role": "STAFF",
+      "preConditions": "Tồn tại khiếu nại chưa xử lý trong hệ thống",
+      "endpoint": "POST /api/v1/staff/disputes/1/process",
+      "headers": {
+        "Authorization": "Bearer {{staff_token}}"
+      },
+      "testData": {
+        "status": "APPROVED_REFUND",
+        "resolutionNote": "Kiểm quỹ ATM Ba Đình dư 2.000.000 VNĐ trùng khớp giờ giao dịch. Đã hoàn tiền cho khách."
+      },
+      "expectedResult": "HTTP 200 OK. Trạng thái khiếu nại chuyển sang 'ĐÃ GIẢI QUYẾT / HOÀN TIỀN'.",
+      "uiBehavior": "Đổi màu trạng thái thành xanh, cập nhật ngày giờ hoàn tất xử lý."
+    },
+    {
+      "id": "TC-CMS-01",
+      "module": "FINANCIAL_RATES_CMS",
+      "title": "Cập nhật bảng Tỷ giá hối đoái ngoại tệ",
+      "type": "FUNCTIONAL",
+      "priority": "HIGH",
+      "role": "ADMIN",
+      "preConditions": "Có quyền DATA_MANAGE",
+      "endpoint": "POST /api/v1/data/rates/exchange-rates",
+      "headers": {
+        "Authorization": "Bearer {{admin_token}}"
+      },
+      "testData": {
+        "currencyCode": "EUR",
+        "buyRate": 27150.00,
+        "sellRate": 28650.00,
+        "transferRate": 27280.00,
+        "effectiveDate": "2026-09-09"
+      },
+      "expectedResult": "HTTP 200 OK. Dữ liệu tỷ giá EUR mới nhất được lưu và đồng bộ ra Cổng thông tin điện tử.",
+      "uiBehavior": "Bảng tỷ giá trên Cổng thông tin công khai cập nhật số liệu EUR tương ứng."
+    },
+    {
+      "id": "TC-WEB-01",
+      "module": "CHATBOT_PUBLIC_WEB",
+      "title": "Khách vãng lai đặt lịch hẹn giao dịch quầy qua Chatbot / Cổng điện tử",
+      "type": "FUNCTIONAL",
+      "priority": "MEDIUM",
+      "role": "PUBLIC",
+      "preConditions": "Không cần đăng nhập (Công khai)",
+      "endpoint": "POST /api/v1/portal/appointments",
+      "testData": {
+        "fullName": "Phan Nhật Nam",
+        "phoneNumber": "0909123456",
+        "branchId": 1,
+        "branchName": "VCB Chi nhánh Sở Giao dịch Hà Nội",
+        "serviceType": "Đăng ký Dịch vụ Vay mua nhà",
+        "appointmentDate": "2026-09-15",
+        "timeSlot": "14:00 - 15:00"
+      },
+      "expectedResult": "HTTP 200 OK. Sinh mã phiếu hẹn APT-2026-991, lưu vào hàng đợi tiếp đón chi nhánh.",
+      "uiBehavior": "Chatbot trả lời: 'Vietcombank đã ghi nhận lịch hẹn của Quý khách. Mã số hẹn: APT-2026-991'."
+    },
+    {
+      "id": "TC-REP-01",
+      "module": "AUDIT_REPORTS",
+      "title": "Xem Dashboard thống kê tổng quan tín dụng & giao dịch",
+      "type": "FUNCTIONAL",
+      "priority": "HIGH",
+      "role": "MANAGER",
+      "preConditions": "Đăng nhập bằng tài khoản Quản lý hoặc Giám đốc",
+      "endpoint": "GET /api/v1/reports/summary",
+      "headers": {
+        "Authorization": "Bearer {{manager_token}}"
+      },
+      "expectedResult": "HTTP 200 OK. Trả về tổng dư nợ, số lượng hồ sơ theo từng trạng thái, biểu đồ tăng trưởng.",
+      "uiBehavior": "Hiển thị 4 thẻ KPI số liệu tài chính, biểu đồ miền dư nợ và danh sách hồ sơ gần nhất."
+    }
+  ]
+}

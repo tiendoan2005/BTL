@@ -1,0 +1,768 @@
+{
+  "info": {
+    "_postman_id": "vcb-digital-banking-api-tests-2026",
+    "name": "Vietcombank Digital Banking - Complete QA Test Collection",
+    "description": "Bộ kiểm thử API toàn diện cho hệ thống Ngân hàng số Vietcombank:\n- Xác thực 2FA (OTP) cho Cán bộ & Quản trị\n- Cổng Khách hàng số (Cá nhân & Doanh nghiệp)\n- Kiểm thử Phân quyền RBAC & Bảo mật (403 Forbidden)\n- Thẩm định hồ sơ vay vốn, chi tiết gói vay ô tô\n- Nghiệp vụ Nhân viên (CRM, Ticket, Tra soát, Giao dịch tài chính)\n- Tỷ giá, Lãi suất, Giá vàng, CMS Tin tức, Chatbot & Báo cáo",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "customer_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "temp_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "dev_otp",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01. Xác thực 2 lớp (Auth & Security 2FA)",
+      "item": [
+        {
+          "name": "1.1 Đăng nhập Bước 1 (Admin Super)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.tempToken) {",
+                  "    pm.collectionVariables.set('temp_token', jsonData.data.tempToken);",
+                  "    pm.collectionVariables.set('dev_otp', jsonData.data.devOtp);",
+                  "    console.log('Saved tempToken and devOtp: ' + jsonData.data.devOtp);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin_super\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "1.2 Xác thực OTP Bước 2 (Admin Super -> Nhận JWT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.accessToken) {",
+                  "    pm.collectionVariables.set('token', jsonData.data.accessToken);",
+                  "    console.log('Saved Admin Access Token!');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin_super\",\n  \"tempToken\": \"{{temp_token}}\",\n  \"otpCode\": \"{{dev_otp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/verify-otp",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "verify-otp"]
+            }
+          }
+        },
+        {
+          "name": "1.3 Đăng nhập Bước 1 (ql_minhtuan - Quản lý phê duyệt)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.tempToken) {",
+                  "    pm.collectionVariables.set('temp_token', jsonData.data.tempToken);",
+                  "    pm.collectionVariables.set('dev_otp', jsonData.data.devOtp);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"ql_minhtuan\",\n  \"password\": \"Manager@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "1.4 Xác thực OTP Bước 2 (ql_minhtuan -> Lưu Token Manager)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.accessToken) {",
+                  "    pm.collectionVariables.set('manager_token', jsonData.data.accessToken);",
+                  "    console.log('Saved Manager Token!');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"ql_minhtuan\",\n  \"tempToken\": \"{{temp_token}}\",\n  \"otpCode\": \"{{dev_otp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/verify-otp",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "verify-otp"]
+            }
+          }
+        },
+        {
+          "name": "1.5 Gửi lại mã OTP (Resend OTP)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin_super\",\n  \"tempToken\": \"{{temp_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/resend-otp",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "resend-otp"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. Kiểm thử Phân quyền RBAC & Bảo mật (Security Matrix)",
+      "item": [
+        {
+          "name": "2.1 [PASS] Admin gọi danh sách Users (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Admin should successfully access Users API with 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/system/users",
+              "host": ["{{base_url}}"],
+              "path": ["system", "users"]
+            }
+          }
+        },
+        {
+          "name": "2.2 [SECURITY TEST] Quản lý gọi API Users -> Phải bị chặn 403 Forbidden",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('SECURITY RULE: ROLE_MANAGER MUST be denied with 403 Forbidden', function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/system/users",
+              "host": ["{{base_url}}"],
+              "path": ["system", "users"]
+            }
+          }
+        },
+        {
+          "name": "2.3 [PASS] Tạo tài khoản cán bộ mới (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"nv_test2026\",\n  \"rawPassword\": \"Bank@12345\",\n  \"email\": \"test.nv2026@bank.com\",\n  \"fullName\": \"Trần Văn Test\",\n  \"phoneNumber\": \"0988112233\",\n  \"roleCodes\": [\"ROLE_STAFF\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/system/users",
+              "host": ["{{base_url}}"],
+              "path": ["system", "users"]
+            }
+          }
+        },
+        {
+          "name": "2.4 Lấy danh sách Vai trò & Quyền hạn (/system/roles)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/system/roles",
+              "host": ["{{base_url}}"],
+              "path": ["system", "roles"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. Phê duyệt Hồ sơ & Chi tiết Khoản vay (Approvals)",
+      "item": [
+        {
+          "name": "3.1 Lấy danh sách hồ sơ cần thẩm định",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/approvals/applications",
+              "host": ["{{base_url}}"],
+              "path": ["approvals", "applications"]
+            }
+          }
+        },
+        {
+          "name": "3.2 Xem chi tiết hồ sơ thẩm định (kèm gói vay mua xe ô tô)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/approvals/applications/1001",
+              "host": ["{{base_url}}"],
+              "path": ["approvals", "applications", "1001"]
+            }
+          }
+        },
+        {
+          "name": "3.3 Quản lý ra quyết định Phê duyệt (APPROVED)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"APPROVED\",\n  \"reasonNote\": \"Hồ sơ tài chính và tài sản đảm bảo đạt chuẩn thẩm định tín dụng Vietcombank.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/approvals/applications/1003/action",
+              "host": ["{{base_url}}"],
+              "path": ["approvals", "applications", "1003", "action"]
+            }
+          }
+        },
+        {
+          "name": "3.4 Quản lý yêu cầu bổ sung hồ sơ (REQUEST_DOCS)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"REQUEST_DOCS\",\n  \"reasonNote\": \"Yêu cầu khách hàng tải lên sao kê bảng lương 3 tháng gần nhất có mộc ngân hàng.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/approvals/applications/1002/action",
+              "host": ["{{base_url}}"],
+              "path": ["approvals", "applications", "1002", "action"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. Cổng Khách hàng số (Customer Portal APIs)",
+      "item": [
+        {
+          "name": "4.1 Đăng ký Khách hàng Cá nhân mới",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"kh_tester01\",\n  \"password\": \"Customer@123\",\n  \"fullName\": \"Đỗ Hoàng Minh\",\n  \"idCardNumber\": \"001099887766\",\n  \"phoneNumber\": \"0966554433\",\n  \"email\": \"minh.do@test.vn\",\n  \"dateOfBirth\": \"1997-06-18\",\n  \"gender\": \"MALE\",\n  \"monthlyIncome\": 28000000,\n  \"companyName\": \"Công ty Cổ phần VinaTech\",\n  \"position\": \"Kỹ sư phần mềm\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/customer/auth/register/individual",
+              "host": ["{{base_url}}"],
+              "path": ["customer", "auth", "register", "individual"]
+            }
+          }
+        },
+        {
+          "name": "4.2 Đăng ký Khách hàng Doanh nghiệp mới",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"dn_testcorp\",\n  \"password\": \"Customer@123\",\n  \"companyName\": \"Công ty TNHH Đầu Tư Xây Dựng Á Đông\",\n  \"taxCode\": \"0109887766\",\n  \"representativeName\": \"Phạm Quốc Cường\",\n  \"businessLicenseNumber\": \"GPKD-2026-999\",\n  \"charterCapital\": 15000000000,\n  \"phoneNumber\": \"0243888999\",\n  \"email\": \"contact@adongcorp.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/customer/auth/register/enterprise",
+              "host": ["{{base_url}}"],
+              "path": ["customer", "auth", "register", "enterprise"]
+            }
+          }
+        },
+        {
+          "name": "4.3 Đăng nhập Khách hàng (kh_thuha)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Customer Login Successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('customer_token', jsonData.data.token);",
+                  "    console.log('Saved Customer Token!');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"kh_thuha\",\n  \"password\": \"Customer@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/customer/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["customer", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "4.4 Lấy thông tin tài khoản Khách hàng hiện tại",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customer_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/customer/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["customer", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "4.5 Nộp hồ sơ Vay Mua Ô tô (Auto Loan)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customer_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loanAmount\": 600000000,\n  \"loanTermMonths\": 60,\n  \"carBrand\": \"Hyundai\",\n  \"carModel\": \"SantaFe 2.5 AWD\",\n  \"manufactureYear\": 2026,\n  \"carPrice\": 1250000000,\n  \"isNewCar\": true,\n  \"estimatedCollateralValue\": 1250000000,\n  \"documentProofUrl\": \"/uploads/docs/hop_dong_mua_xe.pdf\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/customer/loans/auto",
+              "host": ["{{base_url}}"],
+              "path": ["customer", "loans", "auto"]
+            }
+          }
+        },
+        {
+          "name": "4.6 Mở Sổ Tiết kiệm Online kỳ hạn 12 tháng",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customer_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productCode\": \"SAVING_ONLINE_12M\",\n  \"depositAmount\": 100000000,\n  \"termMonths\": 12,\n  \"interestRate\": 6.80\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/customer/savings/open",
+              "host": ["{{base_url}}"],
+              "path": ["customer", "savings", "open"]
+            }
+          }
+        },
+        {
+          "name": "4.7 Đăng ký phát hành Thẻ Tín dụng Quốc tế",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customer_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cardType\": \"VISA_PLATINUM\",\n  \"requestedLimit\": 80000000,\n  \"salaryProof\": \"Sao kê bảng lương Techcombank 6 tháng\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/customer/cards/apply",
+              "host": ["{{base_url}}"],
+              "path": ["customer", "cards", "apply"]
+            }
+          }
+        },
+        {
+          "name": "4.8 Tra cứu Danh sách hồ sơ đã nộp của tôi",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customer_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/customer/my-applications",
+              "host": ["{{base_url}}"],
+              "path": ["customer", "my-applications"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05. Nghiệp vụ Nhân viên Ngân hàng (Staff Module)",
+      "item": [
+        {
+          "name": "5.1 Tạo phiếu Tư vấn Quản lý Khách hàng (CRM)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": 501,\n  \"productType\": \"Gói vay an cư 35 năm\",\n  \"notes\": \"Khách hàng quan tâm dự án Vinhomes, nhu cầu giải ngân 1.2 tỷ trong tháng 10.\",\n  \"status\": \"FOLLOW_UP\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/staff/advisories",
+              "host": ["{{base_url}}"],
+              "path": ["staff", "advisories"]
+            }
+          }
+        },
+        {
+          "name": "5.2 Tiếp nhận & Cập nhật Support Ticket CSKH",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"RESOLVED\",\n  \"actionNote\": \"Đã xác thực eKYC trực tuyến và kích hoạt lại Smart OTP trên điện thoại mới thành công.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/staff/tickets/1/status",
+              "host": ["{{base_url}}"],
+              "path": ["staff", "tickets", "1", "status"]
+            }
+          }
+        },
+        {
+          "name": "5.3 Xử lý Yêu cầu Tra soát Khiếu nại (Dispute)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"APPROVED_REFUND\",\n  \"resolutionNote\": \"Đã xác nhận sự cố nuốt tiền tại cây ATM Ba Đình. Hoàn trả 2.000.000 VNĐ về tài khoản khách hàng.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/staff/disputes/1/process",
+              "host": ["{{base_url}}"],
+              "path": ["staff", "disputes", "1", "process"]
+            }
+          }
+        },
+        {
+          "name": "5.4 Thực hiện Giao dịch Tài chính chuyển khoản tại quầy",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"senderCustomerId\": 501,\n  \"receiverAccountNumber\": \"0011009988776\",\n  \"receiverName\": \"Nguyễn Văn Hưởng\",\n  \"bankName\": \"INTERNAL\",\n  \"amount\": 50000000,\n  \"fee\": 0,\n  \"description\": \"Chuyển tiền thanh toán hợp đồng kinh doanh\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/staff/transactions",
+              "host": ["{{base_url}}"],
+              "path": ["staff", "transactions"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06. Dữ liệu Biến động & CMS Tin tức (Rates & Posts)",
+      "item": [
+        {
+          "name": "6.1 Lấy dữ liệu Tỷ giá, Vàng & Lãi suất mới nhất",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/data/rates/latest",
+              "host": ["{{base_url}}"],
+              "path": ["data", "rates", "latest"]
+            }
+          }
+        },
+        {
+          "name": "6.2 Cập nhật Tỷ giá ngoại tệ USD hôm nay",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currencyCode\": \"USD\",\n  \"buyRate\": 25420.00,\n  \"sellRate\": 25820.00,\n  \"transferRate\": 25450.00,\n  \"effectiveDate\": \"2026-09-09\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/data/rates/exchange-rates",
+              "host": ["{{base_url}}"],
+              "path": ["data", "rates", "exchange-rates"]
+            }
+          }
+        },
+        {
+          "name": "6.3 Đăng bài viết Tin tức mới (CMS)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Vietcombank đón đầu kỷ nguyên Ngân hàng số thông minh 2026\",\n  \"summary\": \"Ứng dụng công nghệ Trí tuệ nhân tạo AI và dữ liệu lớn trong tối ưu hóa trải nghiệm tài chính cá nhân hóa.\",\n  \"content\": \"<p>Vietcombank tiếp tục khẳng định vị thế ngân hàng số hàng đầu với chuỗi tiện ích thanh toán thông minh...</p>\",\n  \"thumbnailUrl\": \"https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800\",\n  \"categoryId\": 4,\n  \"status\": \"PUBLISHED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cms/posts",
+              "host": ["{{base_url}}"],
+              "path": ["cms", "posts"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07. Cổng Thông tin & Chatbot (Public APIs)",
+      "item": [
+        {
+          "name": "7.1 Lấy Banners Carousel Cổng thông tin",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/portal/banners",
+              "host": ["{{base_url}}"],
+              "path": ["portal", "banners"]
+            }
+          }
+        },
+        {
+          "name": "7.2 Lấy danh sách Tin tức cho thanh cuộn ngang 2 chiều",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/portal/posts/latest",
+              "host": ["{{base_url}}"],
+              "path": ["portal", "posts", "latest"]
+            }
+          }
+        },
+        {
+          "name": "7.3 Tra cứu danh sách Chi nhánh & Phòng giao dịch",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/portal/branches",
+              "host": ["{{base_url}}"],
+              "path": ["portal", "branches"]
+            }
+          }
+        },
+        {
+          "name": "7.4 Đặt lịch hẹn giao dịch tại quầy (Chatbot/Portal)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Hoàng Gia Bảo\",\n  \"phoneNumber\": \"0912999888\",\n  \"email\": \"giabao@gmail.com\",\n  \"branchId\": 1,\n  \"branchName\": \"Chi nhánh Vietcombank Hoàn Kiếm\",\n  \"serviceType\": \"Mở tài khoản & Thẻ tín dụng cao cấp\",\n  \"appointmentDate\": \"2026-09-12\",\n  \"timeSlot\": \"09:00 - 10:00\",\n  \"note\": \"Cần tư vấn gói phát hành thẻ Visa Signature\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/portal/appointments",
+              "host": ["{{base_url}}"],
+              "path": ["portal", "appointments"]
+            }
+          }
+        },
+        {
+          "name": "7.5 Lấy danh mục Câu hỏi thường gặp Chatbot FAQ",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/portal/chatbot/faqs",
+              "host": ["{{base_url}}"],
+              "path": ["portal", "chatbot", "faqs"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "08. Báo cáo Thống kê & Audit Logs",
+      "item": [
+        {
+          "name": "8.1 Xem Thống kê Tổng quan (Dashboard Summary)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{manager_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/summary",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "summary"]
+            }
+          }
+        },
+        {
+          "name": "8.2 Tra cứu Nhật ký Kiểm toán Hệ thống (Audit Logs)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/system/audit-logs",
+              "host": ["{{base_url}}"],
+              "path": ["system", "audit-logs"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

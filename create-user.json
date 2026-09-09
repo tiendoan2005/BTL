@@ -1,0 +1,8 @@
+{
+  "username": "tester_phase5",
+  "password": "Password@123",
+  "email": "tester_phase5@bank.com",
+  "fullName": "Lê Văn Tester",
+  "phoneNumber": "0988776655",
+  "roleIds": [2, 3]
+}

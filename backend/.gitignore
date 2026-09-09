@@ -1,0 +1,7 @@
+target/
+*.class
+*.log
+uploads/
+.idea/
+*.iml
+.vscode/

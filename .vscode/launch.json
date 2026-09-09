@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "▶️ Chạy Backend (Spring Boot)",
+      "request": "launch",
+      "mainClass": "com.bank.admin.AdminPortalApplication",
+      "projectName": "admin-portal",
+      "cwd": "${workspaceFolder}/backend"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: admin-portal
+  datasource:
+    url: jdbc:mysql://${DB_HOST:100.86.222.38}:3306/admin_portal_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Ho_Chi_Minh&allowPublicKeyRetrieval=true&useSSL=false&nullCatalogMeansCurrent=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:1}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 10000
+  jpa:
+    # Schema duoc quan ly bang script db/schema.sql -> Hibernate khong tu tao/sua table
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        temp:
+          use_jdbc_metadata_defaults: false
+  jackson:
+    default-property-inclusion: non_null
+    time-zone: Asia/Ho_Chi_Minh
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 15MB
+
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+app:
+  jwt:
+    # TO DO prod: day qua bien moi truong, khong hardcode
+    secret: ${JWT_SECRET:btl-admin-portal-dev-secret-key-must-be-at-least-256-bit-long-for-hs256}
+    access-expiration-minutes: 30
+    refresh-expiration-days: 7
+  security:
+    # dev: true -> OTP tra ve trong response de test, khong can SMTP
+    otp-dev-mode: true
+    cors:
+      allowed-origins: http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174,http://localhost:5175,http://127.0.0.1:5175
+  upload:
+    dir: ./uploads
+  seed:
+    demo-data: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.bank.admin: DEBUG
+    org.springframework.security: WARN

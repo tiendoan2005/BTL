@@ -1,0 +1,368 @@
+2.2. Qun lý mua hàng và nhà cung cp
+2.2.1. Thành viên và phân chia công vic
+2.2.2. Vai trò ca h thng
+Phân h Qun lý mua hàng và Nhà cung cp trong gii pháp ERP dành cho Công ty TNHH Fasttech Asia ­ thng hiu Coolmate có vai trò qun lý toàn b quá trình mua hàng t khi phát sinh nhu cu mua n khi nhn hàng và thanh toán cho nhà cung cp.
+Phân h này có mi quan h cht ch vi các phân h khác trong h thng ERP nh Qun lý kho, Tài chính ­ K toán và Qun lý bán hàng. Thông tin mua hàng c ng b gia các phân h nhm m bo d liu c cp nht thng nht và h tr doanh nghip kim soát hot ng mua sm.
+Quy trình mua hàng c thc hin theo trình t:
+Nhu cu mua hàng  Yêu cu mua hàng  Phê duyt  Lp n mua hàng  Duyt n mua hàng  Theo dõi giao hàng  Nhn hàng  Ghi nhn công n  Thanh toán  i soát công n.
+Phân h giúp Coolmate qun lý tp trung thông tin nhà cung cp, theo dõi các yêu cu và n mua hàng, kim soát tin  giao hàng, ng thi theo dõi các khon công n phi tr cho nhà cung cp.
+2.2.3. Yêu cu ca h thng
+H thng qun lý mua hàng và nhà cung cp cn áp ng các yêu cu sau:
+· Qun lý tp trung thông tin ca các nhà cung cp.
+· Cho phép ánh giá và xp hng nhà cung cp da trên các tiêu chí nh cht lng, giá c và tin  giao hàng.
+· Cho phép nhân viên lp yêu cu mua hàng khi phát sinh nhu cu v nguyên vt liu, sn phm, bao bì hoc các mt hàng phc v hot ng kinh doanh.
+· Cho phép cp có thm quyn phê duyt hoc t chi yêu cu mua hàng.
+· Cho phép lp và qun lý n mua hàng da trên yêu cu mua hàng ã c phê duyt.
+· Theo dõi tình trng ca n mua hàng t khi lp n khi hoàn tt.
+· Theo dõi lch giao hàng, tin  giao hàng và tình trng nhn hàng.
+· Cp nht thông tin hàng hóa ã nhn cho phân h Qun lý kho.
+· Ghi nhn và theo dõi công n phi tr i vi tng nhà cung cp.
+· Theo dõi các khon công n n hn và quá hn.
+
+· H tr thanh toán và i soát công n vi nhà cung cp.
+· Cung cp báo cáo v tình hình mua hàng, nhà cung cp, giao hàng và công n phi tr.
+2.2.4. Kho sát
+2.2.4.1. Quy trình qun lý mua hàng và nhà cung cp
+a. Qun lý nhà cung cp
+B phn ph trách mua hàng cp nht thông tin các nhà cung cp vào h thng, bao gm tên nhà cung cp, a ch, s in thoi, email, thông tin liên h và các thông tin liên quan.
+H thng cho phép nhân viên tìm kim, cp nht thông tin và theo dõi lch s giao dch vi tng nhà cung cp.
+Ngoài ra, h thng h tr ánh giá và xp hng nhà cung cp da trên các tiêu chí nh cht lng hàng hóa, giá mua, thi gian giao hàng và mc  áp ng yêu cu.
+b. Yêu cu mua hàng
+Khi phát sinh nhu cu mua hàng, nhân viên hoc b phn có nhu cu lp yêu cu mua hàng trên h thng.
+Yêu cu mua hàng bao gm các thông tin nh sn phm cn mua, s lng, thi gian cn hàng và lý do mua hàng.
+Sau khi c lp, yêu cu s c gi n ngi có thm quyn  kim tra và phê duyt.
+Nu yêu cu hp l, h thng chuyn sang bc lp n mua hàng. Nu không hp l, yêu cu c tr li  chnh sa.
+c. n mua hàng
+Da trên yêu cu mua hàng ã c phê duyt, nhân viên mua hàng tin hành la chn nhà cung cp và lp n mua hàng.
+n mua hàng bao gm nhà cung cp, sn phm, s lng, n giá, thi gian giao hàng và các iu kin mua hàng.
+Sau khi lp, n mua hàng c gi n ngi có thm quyn  duyt.
+H thng cho phép theo dõi trng thái n mua hàng nh:
+Ch duyt  ã duyt  ang giao  ã nhn hàng  Hoàn tt.
+d. Theo dõi giao hàng
+
+Sau khi n mua hàng c duyt, nhân viên mua hàng theo dõi tin  giao hàng ca nhà cung cp.
+H thng lu li lch giao hàng d kin, thi gian giao thc t và tình trng hàng hóa.
+Khi hàng c giao n kho, nhân viên kho kim tra s lng và tình trng hàng hóa thc t.
+Nu hàng hóa phù hp vi n mua hàng, nhân viên kho xác nhn nhn hàng và h thng cp nht d liu sang phân h Qun lý kho.
+Nu xy ra trng hp giao thiu, giao sai hoc hàng không t yêu cu, nhân viên ghi nhn trên h thng  x lý vi nhà cung cp.
+e. Qun lý công n phi tr
+Sau khi hàng hóa c nhn và xác nhn, h thng ghi nhn giá tr mua hàng và khon công n phi tr cho nhà cung cp.
+Nhân viên k toán có th theo dõi công n theo tng nhà cung cp, tng n mua hàng và thi hn thanh toán.
+Khi n hn, nhân viên thc hin thanh toán cho nhà cung cp và cp nht trng thái thanh toán trên h thng.
+H thng h tr i soát gia n mua hàng ­ hàng ã nhn ­ hóa n ­ khon thanh toán nhm hn ch sai lch trong quá trình thanh toán.
+2.2.4.2. ánh giá hin trng
+u im ca h thng c
+· Thông tin mua hàng và nhà cung cp ã c lu tr.
+· Các nhân viên có th thc hin các công vic mua hàng theo quy trình ca doanh nghip.
+· Các hot ng nhp hàng và thanh toán c thc hin theo tng nghip v.
+Nhc im ca h thng c
+· Thông tin nhà cung cp cha c qun lý tp trung.
+· Vic tìm kim lch s mua hàng và giao dch vi nhà cung cp mt nhiu thi gian.
+· Khó theo dõi toàn b quá trình t yêu cu mua hàng n n mua hàng và nhn hàng.
+· Vic theo dõi tin  giao hàng còn th công, khó phát hin các n hàng giao chm.
+
+· Khó ánh giá và so sánh cht lng gia các nhà cung cp. · Vic theo dõi công n phi tr cha c liên kt trc tip vi n mua hàng và
+hàng ã nhn. · Vic tng hp báo cáo mua hàng, giao hàng và công n mt nhiu thi gian. · D liu gia b phn mua hàng, kho và k toán có th không ng b. Vì vy, cn xây dng phân h Qun lý mua hàng và Nhà cung cp trong h thng ERP  tp trung hóa d liu và t ng hóa quy trình mua hàng. 2.2.5. Yêu cu chc nng 2.2.5.1. Xác nh yêu cu chc nng 1. Qun lý nhà cung cp H thng cho phép: · Thêm thông tin nhà cung cp. · Sa thông tin nhà cung cp. · Xóa hoc ngng s dng nhà cung cp. · Tìm kim nhà cung cp. · Xem lch s giao dch vi nhà cung cp. · ánh giá nhà cung cp. · Xp hng nhà cung cp. Các thông tin qun lý gm: · Mã nhà cung cp. · Tên nhà cung cp. · a ch. · S in thoi. · Email. · Ngi liên h. · Thông tin tài khon ngân hàng. · Trng thái nhà cung cp. 2. Qun lý yêu cu mua hàng H thng cho phép:
+
+· To yêu cu mua hàng. · Nhp sn phm cn mua. · Nhp s lng cn mua. · Xác nh thi gian cn hàng. · Gi yêu cu phê duyt. · Phê duyt hoc t chi yêu cu. · Theo dõi trng thái yêu cu mua hàng. 3. Qun lý n mua hàng H thng cho phép: · To n mua hàng. · La chn nhà cung cp. · Chn sn phm cn mua. · Nhp s lng và n giá. · Xác nh thi gian giao hàng. · Duyt n mua hàng. · Theo dõi trng thái n mua hàng. · Cp nht hoc hy n mua hàng khi cn thit. 4. Theo dõi giao hàng H thng cho phép: · Theo dõi lch giao hàng. · Theo dõi tin  giao hàng. · Cp nht thi gian giao hàng thc t. · Ghi nhn s lng hàng ã nhn. · Ghi nhn hàng giao thiu hoc giao sai. · Xác nhn hoàn tt nhn hàng. · Cp nht s lng hàng ã nhn sang phân h qun lý kho. 5. Qun lý công n phi tr H thng cho phép: · Ghi nhn công n phát sinh t n mua hàng.
+
+· Theo dõi công n theo tng nhà cung cp. · Theo dõi công n theo tng n mua hàng. · Theo dõi thi hn thanh toán. · Cnh báo công n n hn hoc quá hn. · Ghi nhn thanh toán cho nhà cung cp. · Theo dõi s tin ã tr và s tin còn phi tr. · i soát công n vi nhà cung cp. 6. Báo cáo H thng cung cp: · Báo cáo tình hình mua hàng. · Báo cáo theo nhà cung cp. · Báo cáo n mua hàng. · Báo cáo tình trng giao hàng. · Báo cáo hàng ã nhn. · Báo cáo công n phi tr. · Báo cáo công n n hn và quá hn. · Báo cáo ánh giá và xp hng nhà cung cp. 2.2.5.2. Xác nh yêu cu phi chc nng  H thng c trin khai di dng phn mm qun lý ERP.  Giao din n gin, d s dng i vi nhân viên mua hàng, kho và k toán.  D liu mua hàng phi c lu tr tp trung.  H thng m bo kh nng truy xut d liu nhanh chóng.  Các thao tác to, sa, duyt và thanh toán phi c lu li lch s.  H thng h tr phân quyn theo tng vai trò ngi s dng.  D liu gia các phân h mua hàng, kho và tài chính ­ k toán phi c ng b.  H thng m bo an toàn và bo mt thông tin nhà cung cp và giao dch mua hàng. 2.2.6. C s lý thuyt
+
+ xây dng phân h qun lý mua hàng và nhà cung cp trong gii pháp ERP cho Công ty TNHH Fasttech Asia ­ thng hiu Coolmate, h thng c xây dng da trên các c s:
+· Phân tích và thit k: Phân tích thit k h thng theo hng i tng.
+· C s d liu: S dng h qun tr c s d liu  lu tr thông tin nhà cung cp, yêu cu mua hàng, n mua hàng, giao hàng và công n.
+· Kin trúc h thng: Các phân h ERP c kt ni và trao i d liu vi nhau thông qua h thng qun lý tp trung.
+2.2.7. Phân tích thit k
+2.2.7.1. Mô t bài toán
+i vi Công ty TNHH Fasttech Asia ­ thng hiu Coolmate, hot ng mua hàng óng vai trò quan trng trong vic m bo ngun hàng và nguyên vt liu phc v hot ng kinh doanh.
+Khi phát sinh nhu cu mua hàng, b phn có nhu cu s lp yêu cu mua hàng trên h thng. Yêu cu c gi n ngi có thm quyn  kim tra và phê duyt.
+Sau khi yêu cu c phê duyt, nhân viên mua hàng tin hành la chn nhà cung cp phù hp và lp n mua hàng. n mua hàng c gi n ngi có thm quyn  duyt trc khi thc hin.
+Sau khi n mua hàng c duyt, nhân viên mua hàng theo dõi tin  giao hàng ca nhà cung cp. Khi hàng c giao, b phn kho kim tra s lng và tình trng hàng hóa. Hàng t yêu cu s c xác nhn nhp kho.
+Thông tin hàng ã nhn c ng b sang phân h Qun lý kho. ng thi, giá tr hàng mua c chuyn sang phân h Tài chính ­ K toán  ghi nhn công n phi tr.
+Khi n hn thanh toán, b phn k toán thc hin thanh toán cho nhà cung cp. Sau khi thanh toán, h thng cp nht s tin ã tr và s tin còn phi tr.
+Nh vy, quy trình tng th ca phân h c thc hin nh sau:
+Qun lý nhà cung cp  Yêu cu mua hàng  Phê duyt  n mua hàng  Duyt n mua  Theo dõi giao hàng  Nhn hàng  Ghi nhn công n  Thanh toán  i soát công n.
+2.2.7.2. Xác nh tác nhân
+Các tác nhân chính ca phân h Qun lý mua hàng và Nhà cung cp gm:
+Nhân viên mua hàng
+· Qun lý thông tin nhà cung cp.
+
+· To yêu cu mua hàng. · Lp n mua hàng. · Theo dõi n mua hàng. · Theo dõi tin  giao hàng. Qun lý · Phê duyt yêu cu mua hàng. · Phê duyt n mua hàng. · Theo dõi tình hình mua hàng. · Xem báo cáo nhà cung cp và mua hàng. Nhân viên kho · Tip nhn hàng. · Kim tra s lng hàng nhn. · Xác nhn nhn hàng. · Cp nht thông tin nhp kho. Nhân viên k toán · Ghi nhn công n phi tr. · Theo dõi công n nhà cung cp. · Thc hin thanh toán. · i soát công n. 2.2.7.3. Use Case tng quát
+
+2.2.7.4. Usecase "Qun lý nhà cung cp " 2.2.7.5. Usecase "n mua hàng "
+
+2.2.7.6. Usecase "Theo dõi n hàng " 2.2.7.7. Usecase "Qun lý công n "
+
+2.2.7.8. Usecase " Qun lý mua hàng"
+
+Biu
+
+
+
+lp
+
+STT
+
+Tên trng
+
+Kiu d liu
+
+1
+
+MaNCC
+
+String
+
+2
+
+tenNCC
+
+String
+
+3
+
+Email
+
+String
+
+4
+
+soDT
+
+String
+
+5
+
+diaChi
+
+String
+
+6
+
+nguoiLienHe
+
+String
+
+7
+
+taiKhoanNH
+
+String
+
+8
+
+trangThai
+
+String
+
+Ghi chú Mã nhà cung cp - PK Tên nhà cung cp Email S in thoi a ch Ngi liên h Tài khon ngân hàng Trng thái NCC
+
+Bng yêu cu mua hàng
+
+STT
+
+Tên trng
+
+1
+
+maYC
+
+2
+
+maNV
+
+3
+
+ngayYC
+
+4
+
+lyDo
+
+5
+
+trangThai
+
+6
+
+ngayCanHang
+
+Kiu d liu String String Date String String Date
+
+Bng chi tit yêu cu mua
+
+STT
+
+Tên trng
+
+1
+
+maYC
+
+2
+
+maSP
+
+3
+
+soLuong
+
+Kiu d liu String String Int
+
+Bng n mua hàng
+
+STT
+
+Tên trng
+
+1
+
+MaDMH
+
+2
+
+maYC
+
+3
+
+maNCC
+
+4
+
+maNV
+
+5
+
+ngayTao
+
+6
+
+ngayGiaoDuKien
+
+7
+
+trangThai
+
+Kiu d liu String String String String Date Date String
+
+Ghi chú Mã yêu cu ­ PK Mã nhân viên Ngày yêu cu Lý do mua hàng Trng thái yêu cu Ngày cn hàng
+Ghi chú Mã yêu cu - PK Mã sn phm S lng cn mua
+Ghi chú Mã n mua ­ PK Mã yêu cu ­ FK Mã nhà cung cp ­ FK Nhân viên lp n Ngày to Ngày giao d kin Trng thái n
+
+Bng giao hàng
+
+STT
+
+Tên trng
+
+1
+
+maGiaoHang
+
+2
+
+maDMH
+
+3
+
+ngayGiaoDuKien
+
+4
+
+ngayGiaoThucTe
+
+5
+
+soLuongNhan
+
+6
+
+trangThai
+
+Kiu d liu String String Date Date Int String
+
+Bng công n phi tr
+
+STT
+
+Tên trng
+
+1
+
+maNo
+
+2
+
+maNCC
+
+3
+
+maDMH
+
+4
+
+tongTien
+
+5
+
+daThanhToan
+
+6
+
+conPhaiTra
+
+7
+
+hanThanhToan
+
+8
+
+trangThai
+
+Kiu d liu String String String Double Double Double Date String
+
+Bng chi tit n mua hàng
+
+STT
+
+Tên trng
+
+1
+
+maDMH
+
+2
+
+maSP
+
+3
+
+maDMH
+
+4
+
+tongTien
+
+5
+
+daThanhToan
+
+6
+
+conPhaiTra
+
+7
+
+hanThanhToan
+
+8
+
+trangThai
+
+Kiu d liu String String String Double Double Double Date String
+
+Ghi chú Mã giao hàng ­ PK Mã n mua ­ FK Ngày giao d kin Ngày giao thc t S lng ã nhn Trng thái giao hàng
+Ghi chú Mã công n - PK Mã nhà cung cp ­ FK Mã n mua ­ FK Tng tin phi tr S tin ã thanh toán S tin còn phi tr Hn thanh toán Trng thái công n
+Ghi chú Mã công n - PK Mã nhà cung cp ­ FK Mã n mua ­ FK Tng tin phi tr S tin ã thanh toán S tin còn phi tr Hn thanh toán Trng thái công n
+
+
