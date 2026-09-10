@@ -42,6 +42,7 @@ public class DemoDataSeeder {
                                    RoleRepository roleRepository,
                                    PermissionRepository permissionRepository,
                                    com.bank.admin.staff.ChatbotAppointmentRepository appointmentRepository,
+                                   org.springframework.jdbc.core.JdbcTemplate jdbcTemplate,
                                    PasswordEncoder passwordEncoder,
                                    @org.springframework.beans.factory.annotation.Value("${app.security.otp-dev-mode}") boolean otpDevMode,
                                    @org.springframework.beans.factory.annotation.Value("${app.seed.demo-data}") boolean enabled) {
@@ -93,76 +94,108 @@ public class DemoDataSeeder {
             ensureUser(userRepository, passwordEncoder, "nv_hoangnam", "Staff@123",
                 "nam.nv@bank.com", "Nguyễn Hoàng Nam", "0933444555", staff);
 
+            // Đảm bảo bảng chatbot_appointments tồn tại trước khi thao tác
+            try {
+                jdbcTemplate.execute("""
+                    CREATE TABLE IF NOT EXISTS chatbot_appointments (
+                        appointment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                        appointment_code VARCHAR(50) NOT NULL UNIQUE,
+                        full_name VARCHAR(100) NOT NULL,
+                        phone_number VARCHAR(20) NOT NULL,
+                        email VARCHAR(100) NULL,
+                        branch_name VARCHAR(150) NOT NULL,
+                        service_type VARCHAR(150) NOT NULL,
+                        appointment_date DATE NOT NULL,
+                        time_slot VARCHAR(50) NOT NULL,
+                        note TEXT NULL,
+                        status VARCHAR(30) NOT NULL DEFAULT 'PENDING',
+                        handled_by VARCHAR(100) NULL,
+                        handler_note TEXT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                        INDEX idx_appt_status (status),
+                        INDEX idx_appt_phone (phone_number),
+                        INDEX idx_appt_date (appointment_date)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+                """);
+            } catch (Exception ex) {
+                log.warn("Không thể tự động tạo bảng chatbot_appointments qua JDBC: {}", ex.getMessage());
+            }
+
             // Dữ liệu mẫu Lịch hẹn Chatbot cho Giao dịch viên
-            if (appointmentRepository.count() == 0) {
-                appointmentRepository.saveAll(java.util.List.of(
-                    com.bank.admin.staff.ChatbotAppointment.builder()
-                        .appointmentCode("VCB-APT-2026-10001")
-                        .fullName("Nguyễn Văn Tuấn")
-                        .phoneNumber("0912345678")
-                        .email("tuan.nguyen@gmail.com")
-                        .branchName("Chi nhánh Vietcombank Hoàn Kiếm")
-                        .serviceType("Đăng ký Gói vay mua nhà an cư")
-                        .appointmentDate(java.time.LocalDate.now().plusDays(2))
-                        .timeSlot("09:00 - 10:00")
-                        .note("Cần tư vấn lãi suất ưu đãi cố định 2 năm đầu")
-                        .status(com.bank.admin.staff.ChatbotAppointment.Status.PENDING)
-                        .build(),
-                    com.bank.admin.staff.ChatbotAppointment.builder()
-                        .appointmentCode("VCB-APT-2026-10002")
-                        .fullName("Trần Thị Thu Hà")
-                        .phoneNumber("0987654321")
-                        .email("thuha.tran@outlook.com")
-                        .branchName("Chi nhánh Vietcombank Ba Đình")
-                        .serviceType("Mở tài khoản thanh toán số đẹp & Thẻ Visa")
-                        .appointmentDate(java.time.LocalDate.now().plusDays(1))
-                        .timeSlot("10:30 - 11:30")
-                        .note("Muốn chọn đuôi số tài khoản tứ quý 8888")
-                        .status(com.bank.admin.staff.ChatbotAppointment.Status.CONFIRMED)
-                        .handledBy("Nguyễn Hoàng Nam")
-                        .handlerNote("Đã gọi điện xác nhận và chuẩn bị sẵn biểu mẫu")
-                        .build(),
-                    com.bank.admin.staff.ChatbotAppointment.builder()
-                        .appointmentCode("VCB-APT-2026-10003")
-                        .fullName("Lê Hoàng Nam")
-                        .phoneNumber("0933112233")
-                        .email("nam.le@gmail.com")
-                        .branchName("Chi nhánh Vietcombank Sở Giao dịch")
-                        .serviceType("Tư vấn Tiết kiệm lãi suất bậc thang")
-                        .appointmentDate(java.time.LocalDate.now())
-                        .timeSlot("14:00 - 15:00")
-                        .note("Gửi tiết kiệm 1 tỷ đồng")
-                        .status(com.bank.admin.staff.ChatbotAppointment.Status.COMPLETED)
-                        .handledBy("Nguyễn Hoàng Nam")
-                        .handlerNote("Khách hàng đã hoàn tất mở sổ tiết kiệm tại quầy 03")
-                        .build(),
-                    com.bank.admin.staff.ChatbotAppointment.builder()
-                        .appointmentCode("VCB-APT-2026-10004")
-                        .fullName("Công ty Cổ phần VinaTech")
-                        .phoneNumber("0243888999")
-                        .email("contact@vinatech.vn")
-                        .branchName("Chi nhánh Vietcombank Cầu Giấy")
-                        .serviceType("Tín dụng Doanh nghiệp & Phát hành L/C")
-                        .appointmentDate(java.time.LocalDate.now().plusDays(3))
-                        .timeSlot("15:00 - 16:00")
-                        .note("Hạn mức tín dụng xuất nhập khẩu 15 tỷ VND")
-                        .status(com.bank.admin.staff.ChatbotAppointment.Status.PENDING)
-                        .build(),
-                    com.bank.admin.staff.ChatbotAppointment.builder()
-                        .appointmentCode("VCB-APT-2026-10005")
-                        .fullName("Phạm Quốc Cường")
-                        .phoneNumber("0905123987")
-                        .email("cuong.pham@yahoo.com")
-                        .branchName("Chi nhánh Vietcombank Đống Đa")
-                        .serviceType("Nhận tiền kiều hối Western Union")
-                        .appointmentDate(java.time.LocalDate.now().minusDays(1))
-                        .timeSlot("08:30 - 09:30")
-                        .note("Nhận tiền từ người thân tại Hoa Kỳ")
-                        .status(com.bank.admin.staff.ChatbotAppointment.Status.CANCELLED)
-                        .handledBy("Nguyễn Hoàng Nam")
-                        .handlerNote("Khách hàng bận đột xuất, đã hỗ trợ hướng dẫn nhận qua Digibank")
-                        .build()
-                ));
+            try {
+                if (appointmentRepository.count() == 0) {
+                    appointmentRepository.saveAll(java.util.List.of(
+                        com.bank.admin.staff.ChatbotAppointment.builder()
+                            .appointmentCode("VCB-APT-2026-10001")
+                            .fullName("Nguyễn Văn Tuấn")
+                            .phoneNumber("0912345678")
+                            .email("tuan.nguyen@gmail.com")
+                            .branchName("Chi nhánh Vietcombank Hoàn Kiếm")
+                            .serviceType("Đăng ký Gói vay mua nhà an cư")
+                            .appointmentDate(java.time.LocalDate.now().plusDays(2))
+                            .timeSlot("09:00 - 10:00")
+                            .note("Cần tư vấn lãi suất ưu đãi cố định 2 năm đầu")
+                            .status(com.bank.admin.staff.ChatbotAppointment.Status.PENDING)
+                            .build(),
+                        com.bank.admin.staff.ChatbotAppointment.builder()
+                            .appointmentCode("VCB-APT-2026-10002")
+                            .fullName("Trần Thị Thu Hà")
+                            .phoneNumber("0987654321")
+                            .email("thuha.tran@outlook.com")
+                            .branchName("Chi nhánh Vietcombank Ba Đình")
+                            .serviceType("Mở tài khoản thanh toán số đẹp & Thẻ Visa")
+                            .appointmentDate(java.time.LocalDate.now().plusDays(1))
+                            .timeSlot("10:30 - 11:30")
+                            .note("Muốn chọn đuôi số tài khoản tứ quý 8888")
+                            .status(com.bank.admin.staff.ChatbotAppointment.Status.CONFIRMED)
+                            .handledBy("Nguyễn Hoàng Nam")
+                            .handlerNote("Đã gọi điện xác nhận và chuẩn bị sẵn biểu mẫu")
+                            .build(),
+                        com.bank.admin.staff.ChatbotAppointment.builder()
+                            .appointmentCode("VCB-APT-2026-10003")
+                            .fullName("Lê Hoàng Nam")
+                            .phoneNumber("0933112233")
+                            .email("nam.le@gmail.com")
+                            .branchName("Chi nhánh Vietcombank Sở Giao dịch")
+                            .serviceType("Tư vấn Tiết kiệm lãi suất bậc thang")
+                            .appointmentDate(java.time.LocalDate.now())
+                            .timeSlot("14:00 - 15:00")
+                            .note("Gửi tiết kiệm 1 tỷ đồng")
+                            .status(com.bank.admin.staff.ChatbotAppointment.Status.COMPLETED)
+                            .handledBy("Nguyễn Hoàng Nam")
+                            .handlerNote("Khách hàng đã hoàn tất mở sổ tiết kiệm tại quầy 03")
+                            .build(),
+                        com.bank.admin.staff.ChatbotAppointment.builder()
+                            .appointmentCode("VCB-APT-2026-10004")
+                            .fullName("Công ty Cổ phần VinaTech")
+                            .phoneNumber("0243888999")
+                            .email("contact@vinatech.vn")
+                            .branchName("Chi nhánh Vietcombank Cầu Giấy")
+                            .serviceType("Tín dụng Doanh nghiệp & Phát hành L/C")
+                            .appointmentDate(java.time.LocalDate.now().plusDays(3))
+                            .timeSlot("15:00 - 16:00")
+                            .note("Hạn mức tín dụng xuất nhập khẩu 15 tỷ VND")
+                            .status(com.bank.admin.staff.ChatbotAppointment.Status.PENDING)
+                            .build(),
+                        com.bank.admin.staff.ChatbotAppointment.builder()
+                            .appointmentCode("VCB-APT-2026-10005")
+                            .fullName("Phạm Quốc Cường")
+                            .phoneNumber("0905123987")
+                            .email("cuong.pham@yahoo.com")
+                            .branchName("Chi nhánh Vietcombank Đống Đa")
+                            .serviceType("Nhận tiền kiều hối Western Union")
+                            .appointmentDate(java.time.LocalDate.now().minusDays(1))
+                            .timeSlot("08:30 - 09:30")
+                            .note("Nhận tiền từ người thân tại Hoa Kỳ")
+                            .status(com.bank.admin.staff.ChatbotAppointment.Status.CANCELLED)
+                            .handledBy("Nguyễn Hoàng Nam")
+                            .handlerNote("Khách hàng bận đột xuất, đã hỗ trợ hướng dẫn nhận qua Digibank")
+                            .build()
+                    ));
+                }
+            } catch (Exception ex) {
+                log.warn("Không thể khởi tạo dữ liệu mẫu lịch hẹn: {}", ex.getMessage());
             }
 
             log.info("Demo data ready. Dev accounts: admin_super/Admin@123, ql_minhtuan/Manager@123, nv_hoangnam/Staff@123 (otpDevMode={})", otpDevMode);

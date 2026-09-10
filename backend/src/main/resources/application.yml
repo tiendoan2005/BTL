@@ -10,9 +10,9 @@ spring:
       maximum-pool-size: 10
       connection-timeout: 10000
   jpa:
-    # Schema duoc quan ly bang script db/schema.sql -> Hibernate khong tu tao/sua table
+    # Tu dong cap nhat schema bang moi (chatbot_appointments) neu chua co
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
     properties:
