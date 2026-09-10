@@ -22,6 +22,7 @@ import LanguageSwitcher from './LanguageSwitcher';
 import {
   AuditOutlined,
   BankOutlined,
+  CalendarOutlined,
   ContactsOutlined,
   CustomerServiceOutlined,
   DashboardOutlined,
@@ -53,6 +54,7 @@ export default function MainLayout({ children }) {
   const MENU_ITEMS = [
     { key: '/', icon: <DashboardOutlined />, label: t('common.dashboard'), permission: [] },
     { type: 'group', label: t('admin.groupStaff'), permission: ['STAFF_CUSTOMER_ADVISORY', 'STAFF_SUPPORT_TICKET', 'STAFF_DISPUTE_HANDLE', 'STAFF_FINANCIAL_TX'] },
+    { key: '/staff/appointments', icon: <CalendarOutlined />, label: t('admin.menuAppointments'), permission: ['STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET'] },
     { key: '/staff/advisories', icon: <ContactsOutlined />, label: t('admin.menuCrm'), permission: ['STAFF_CUSTOMER_ADVISORY'] },
     { key: '/staff/disputes', icon: <AuditOutlined />, label: t('admin.menuDisputes'), permission: ['STAFF_DISPUTE_HANDLE'] },
     { key: '/staff/tickets', icon: <CustomerServiceOutlined />, label: t('admin.menuTickets'), permission: ['STAFF_SUPPORT_TICKET'] },
@@ -108,8 +110,6 @@ export default function MainLayout({ children }) {
   };
 
   const userMenu = [
-    { key: 'public_portal', icon: <BankOutlined />, label: t('admin.publicPortalView') },
-    { type: 'divider' },
     { key: 'profile', icon: <UserOutlined />, label: t('admin.userProfile') },
     { key: 'password', icon: <KeyOutlined />, label: t('admin.changePassword') },
     { type: 'divider' },
@@ -117,7 +117,6 @@ export default function MainLayout({ children }) {
   ];
 
   const onUserMenuClick = ({ key }) => {
-    if (key === 'public_portal') window.open('#/portal', '_blank');
     if (key === 'profile') setProfileModalOpen(true);
     if (key === 'password') {
       passwordForm.resetFields();
@@ -223,23 +222,6 @@ export default function MainLayout({ children }) {
           </div>
           <Space size="middle" style={{ flexWrap: 'wrap' }}>
             <LanguageSwitcher size="small" />
-            <a
-              href="#/portal"
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                color: '#005030',
-                fontWeight: 600,
-                fontSize: 13,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 4,
-                whiteSpace: 'nowrap',
-              }}
-            >
-              <BankOutlined /> {t('admin.publicPortalView')}
-            </a>
-            <Divider type="vertical" style={{ height: 20 }} />
             <Dropdown menu={{ items: userMenu, onClick: onUserMenuClick }}>
               <Space style={{ cursor: 'pointer' }} size="small">
                 <Avatar icon={<UserOutlined />} style={{ backgroundColor: '#005030' }} />

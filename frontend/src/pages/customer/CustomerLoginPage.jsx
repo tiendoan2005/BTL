@@ -52,7 +52,7 @@ export default function CustomerLoginPage() {
           ? `Chào mừng ${res.fullName} đến với Vietcombank Digital Portal!`
           : `Welcome ${res.fullName} to Vietcombank Digital Portal!`
       );
-      window.location.hash = '#/customer/dashboard';
+      window.location.hash = '#/portal';
     } catch (err) {
       message.error(
         err.response?.data?.message ||

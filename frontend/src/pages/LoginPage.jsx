@@ -433,23 +433,7 @@ export default function LoginPage() {
                     </Button>
                   </div>
 
-                  {/* Account 3: manager_dev (QUẢN LÝ TÍN DỤNG) */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ fontSize: 12 }}>
-                      <Tag color="orange" style={{ fontSize: 10, padding: '0 4px', margin: '0 6px 0 0' }}>TÍN DỤNG</Tag>
-                      <code style={{ color: '#00482B', fontWeight: 600 }}>manager_dev</code>
-                    </div>
-                    <Button
-                      size="small"
-                      type="link"
-                      onClick={() => fillQuickAccount('manager_dev', 'Manager@123')}
-                      style={{ color: '#D97706', fontWeight: 600, fontSize: 12, padding: 0 }}
-                    >
-                      {lang === 'vi' ? 'Điền nhanh →' : 'Quick Fill →'}
-                    </Button>
-                  </div>
-
-                  {/* Account 4: nv_hoangnam (GIAO DỊCH VIÊN) */}
+                  {/* Account 3: nv_hoangnam (GIAO DỊCH VIÊN / QUẢN LÝ LỊCH HẸN) */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ fontSize: 12 }}>
                       <Tag color="blue" style={{ fontSize: 10, padding: '0 4px', margin: '0 6px 0 0' }}>GIAO DỊCH</Tag>

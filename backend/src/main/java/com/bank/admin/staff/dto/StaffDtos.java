@@ -141,4 +141,40 @@ public final class StaffDtos {
         String status,
         Instant createdAt
     ) {}
+
+    // ================= 5. CHATBOT APPOINTMENT DTOS =================
+    public record CreateAppointmentRequest(
+        @NotBlank(message = "Họ tên không được để trống") String fullName,
+        @NotBlank(message = "Số điện thoại không được để trống") String phoneNumber,
+        String email,
+        @NotBlank(message = "Chi nhánh không được để trống") String branchName,
+        @NotBlank(message = "Dịch vụ không được để trống") String serviceType,
+        @NotNull(message = "Ngày hẹn không được để trống") LocalDate appointmentDate,
+        @NotBlank(message = "Khung giờ không được để trống") String timeSlot,
+        String note
+    ) {}
+
+    public record UpdateAppointmentStatusRequest(
+        @NotBlank(message = "Trạng thái mới không được để trống") String status, // PENDING, CONFIRMED, COMPLETED, CANCELLED
+        String handlerNote
+    ) {}
+
+    @Builder
+    public record AppointmentResponse(
+        Long id,
+        String appointmentCode,
+        String fullName,
+        String phoneNumber,
+        String email,
+        String branchName,
+        String serviceType,
+        LocalDate appointmentDate,
+        String timeSlot,
+        String note,
+        String status,
+        String handledBy,
+        String handlerNote,
+        Instant createdAt,
+        Instant updatedAt
+    ) {}
 }

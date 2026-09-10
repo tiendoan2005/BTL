@@ -18,6 +18,7 @@ public class UserPrincipal implements UserDetails {
 
     private final Long id;
     private final String username;
+    private final String fullName;
     private final String passwordHash;
     private final boolean active;
     private final Collection<? extends GrantedAuthority> authorities;
@@ -25,6 +26,7 @@ public class UserPrincipal implements UserDetails {
     public UserPrincipal(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
+        this.fullName = user.getFullName();
         this.passwordHash = user.getPasswordHash();
         this.active = user.isActive();
         this.authorities = user.getRoles().stream()

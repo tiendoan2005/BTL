@@ -24,6 +24,7 @@ import DisputesPage from './pages/staff/DisputesPage';
 import AdvisoriesPage from './pages/staff/AdvisoriesPage';
 import SupportTicketsPage from './pages/staff/SupportTicketsPage';
 import FinancialTransactionsPage from './pages/staff/FinancialTransactionsPage';
+import AppointmentsPage from './pages/staff/AppointmentsPage';
 import PlaceholderPage from './pages/PlaceholderPage';
 
 // Customer Portal Pages
@@ -110,6 +111,7 @@ export default function App() {
               <Route path="/" element={<ProtectedAdmin><DashboardPage /></ProtectedAdmin>} />
 
               {/* Phân hệ Nghiệp vụ Nhân viên ngân hàng (Staff) */}
+              <Route path="/staff/appointments" element={<ProtectedAdmin permissions={['STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET']}><AppointmentsPage /></ProtectedAdmin>} />
               <Route path="/staff/advisories" element={<ProtectedAdmin permissions={['STAFF_CUSTOMER_ADVISORY']}><AdvisoriesPage /></ProtectedAdmin>} />
               <Route path="/staff/disputes" element={<ProtectedAdmin permissions={['STAFF_DISPUTE_HANDLE']}><DisputesPage /></ProtectedAdmin>} />
               <Route path="/staff/tickets" element={<ProtectedAdmin permissions={['STAFF_SUPPORT_TICKET']}><SupportTicketsPage /></ProtectedAdmin>} />

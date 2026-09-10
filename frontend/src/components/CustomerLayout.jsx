@@ -108,7 +108,9 @@ export default function CustomerLayout({ children }) {
   ];
 
   const onUserMenuClick = ({ key }) => {
-    if (key === 'portal_home') window.open('#/portal', '_blank');
+    if (key === 'portal_home') {
+      window.location.hash = '#/portal';
+    }
     if (key === 'profile') loadProfile();
     if (key === 'logout') handleLogout();
   };

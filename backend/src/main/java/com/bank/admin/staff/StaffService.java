@@ -32,6 +32,7 @@ public class StaffService {
     private final FinancialTransactionRepository transactionRepo;
     private final CustomerRepository customerRepo;
     private final UserRepository userRepo;
+    private final ChatbotAppointmentRepository appointmentRepo;
 
     // =========================================================================
     // 1. TRA SOÁT (DISPUTE)
@@ -346,6 +347,99 @@ public class StaffService {
             .staffName(tx.getProcessedByStaff().getFullName())
             .status(tx.getStatus().name())
             .createdAt(tx.getCreatedAt())
+            .build();
+    }
+
+    // =========================================================================
+    // 5. QUẢN LÝ LỊCH HẸN CHATBOT (APPOINTMENT MANAGEMENT)
+    // =========================================================================
+
+    @Transactional
+    public AppointmentResponse createAppointment(CreateAppointmentRequest req) {
+        String code = "VCB-APT-" + LocalDate.now().getYear() + "-" + String.format("%05d", (int)(Math.random() * 90000) + 10000);
+        while (appointmentRepo.existsByAppointmentCode(code)) {
+            code = "VCB-APT-" + LocalDate.now().getYear() + "-" + String.format("%05d", (int)(Math.random() * 90000) + 10000);
+        }
+
+        ChatbotAppointment apt = ChatbotAppointment.builder()
+            .appointmentCode(code)
+            .fullName(req.fullName().trim())
+            .phoneNumber(req.phoneNumber().trim())
+            .email(req.email() != null ? req.email().trim() : null)
+            .branchName(req.branchName().trim())
+            .serviceType(req.serviceType().trim())
+            .appointmentDate(req.appointmentDate())
+            .timeSlot(req.timeSlot().trim())
+            .note(req.note())
+            .status(ChatbotAppointment.Status.PENDING)
+            .build();
+
+        ChatbotAppointment saved = appointmentRepo.save(apt);
+        return toAppointmentDto(saved);
+    }
+
+    @Transactional(readOnly = true)
+    public PagedResponse<AppointmentResponse> searchAppointments(String keyword, String status, int page, int size) {
+        ChatbotAppointment.Status st = null;
+        if (status != null && !status.isBlank()) {
+            try { st = ChatbotAppointment.Status.valueOf(status.toUpperCase()); } catch (Exception ignored) {}
+        }
+        Page<ChatbotAppointment> res = appointmentRepo.search(keyword, st, PageRequest.of(page, size));
+        return new PagedResponse<>(res.map(this::toAppointmentDto).getContent(),
+            res.getNumber(), res.getSize(), res.getTotalElements(), res.getTotalPages());
+    }
+
+    @Transactional
+    @Audited(action = "UPDATE_APPOINTMENT_STATUS", module = "StaffModule", description = "Cập nhật trạng thái lịch hẹn Chatbot")
+    public AppointmentResponse updateAppointmentStatus(Long id, UpdateAppointmentStatusRequest req, String currentStaffName) {
+        ChatbotAppointment apt = appointmentRepo.findById(id)
+            .orElseThrow(() -> ApiException.notFound("Không tìm thấy lịch hẹn #" + id));
+
+        try {
+            apt.setStatus(ChatbotAppointment.Status.valueOf(req.status().toUpperCase()));
+        } catch (Exception e) {
+            throw ApiException.badRequest("Trạng thái không hợp lệ: " + req.status());
+        }
+
+        if (req.handlerNote() != null && !req.handlerNote().isBlank()) {
+            apt.setHandlerNote(req.handlerNote().trim());
+        }
+        if (currentStaffName != null && !currentStaffName.isBlank()) {
+            apt.setHandledBy(currentStaffName);
+        }
+
+        ChatbotAppointment updated = appointmentRepo.save(apt);
+        return toAppointmentDto(updated);
+    }
+
+    @Transactional(readOnly = true)
+    public java.util.Map<String, Long> getAppointmentStats() {
+        return java.util.Map.of(
+            "total", appointmentRepo.count(),
+            "pending", appointmentRepo.countByStatus(ChatbotAppointment.Status.PENDING),
+            "confirmed", appointmentRepo.countByStatus(ChatbotAppointment.Status.CONFIRMED),
+            "completed", appointmentRepo.countByStatus(ChatbotAppointment.Status.COMPLETED),
+            "cancelled", appointmentRepo.countByStatus(ChatbotAppointment.Status.CANCELLED)
+        );
+    }
+
+    private AppointmentResponse toAppointmentDto(ChatbotAppointment a) {
+        return AppointmentResponse.builder()
+            .id(a.getId())
+            .appointmentCode(a.getAppointmentCode())
+            .fullName(a.getFullName())
+            .phoneNumber(a.getPhoneNumber())
+            .email(a.getEmail())
+            .branchName(a.getBranchName())
+            .serviceType(a.getServiceType())
+            .appointmentDate(a.getAppointmentDate())
+            .timeSlot(a.getTimeSlot())
+            .note(a.getNote())
+            .status(a.getStatus().name())
+            .handledBy(a.getHandledBy())
+            .handlerNote(a.getHandlerNote())
+            .createdAt(a.getCreatedAt())
+            .updatedAt(a.getUpdatedAt())
             .build();
     }
 }

@@ -8,6 +8,7 @@ import {
   Col,
   Divider,
   Drawer,
+  Dropdown,
   Form,
   Input,
   InputNumber,
@@ -34,12 +35,15 @@ import {
   CloseOutlined,
   CompassOutlined,
   CustomerServiceOutlined,
+  DashboardOutlined,
   DollarOutlined,
+  DownOutlined,
   EnvironmentOutlined,
   FileDoneOutlined,
   GoldOutlined,
   LeftOutlined,
   LoginOutlined,
+  LogoutOutlined,
   MessageOutlined,
   PercentageOutlined,
   PhoneOutlined,
@@ -54,6 +58,7 @@ import {
 import dayjs from 'dayjs';
 import client from '../../api/client';
 import { useLanguage } from '../../store/LanguageContext';
+import { useCustomerAuth } from '../../store/CustomerAuthContext';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 
 const { Header, Content, Footer } = Layout;
@@ -61,7 +66,39 @@ const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
 
 export default function VietcombankPublicPortal() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const { isCustomerLoggedIn, customer, logoutCustomer } = useCustomerAuth();
+
+  const customerMenuItems = [
+    {
+      key: 'dashboard',
+      icon: <DashboardOutlined />,
+      label: t('customer.menuDashboard') || 'Bảng điều khiển',
+      onClick: () => {
+        window.location.hash = '#/customer/dashboard';
+      },
+    },
+    {
+      key: 'my_apps',
+      icon: <FileDoneOutlined />,
+      label: t('customer.menuMyApplications') || 'Hồ sơ của tôi',
+      onClick: () => {
+        window.location.hash = '#/customer/my-applications';
+      },
+    },
+    { type: 'divider' },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: t('common.logout') || 'Đăng xuất',
+      danger: true,
+      onClick: () => {
+        logoutCustomer();
+        message.success(lang === 'vi' ? 'Đã đăng xuất tài khoản khách hàng' : 'Customer logged out successfully');
+      },
+    },
+  ];
+
   const [exchangeRates, setExchangeRates] = useState([]);
   const [goldRates, setGoldRates] = useState([]);
   const [interestRates, setInterestRates] = useState([]);
@@ -247,8 +284,20 @@ export default function VietcombankPublicPortal() {
   const handleAppointmentSubmit = async (values) => {
     setSubmittingAppointment(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 600));
-      const appointmentCode = 'VCB-APPT-' + Math.floor(100000 + Math.random() * 900000);
+      const payload = {
+        fullName: values.fullName,
+        phoneNumber: values.phoneNumber,
+        email: values.email || null,
+        branchName: values.branchName,
+        serviceType: values.serviceType,
+        appointmentDate: values.appointmentDate,
+        timeSlot: values.timeSlot,
+        note: values.note || null,
+      };
+      const res = await client.post('/public/appointments', payload);
+      const appt = res.data?.data;
+      const appointmentCode = appt?.appointmentCode || ('VCB-APT-' + Math.floor(100000 + Math.random() * 900000));
+
       message.success(`Đặt lịch hẹn thành công! Mã cuộc hẹn của quý khách: ${appointmentCode}`);
       appointmentForm.resetFields();
       setChatMessages((prev) => [
@@ -262,7 +311,8 @@ export default function VietcombankPublicPortal() {
       ]);
       setChatTab('chat');
     } catch (e) {
-      message.error('Không thể đặt lịch hẹn, vui lòng thử lại');
+      console.error(e);
+      message.error(e.response?.data?.message || 'Không thể đặt lịch hẹn, vui lòng thử lại');
     } finally {
       setSubmittingAppointment(false);
     }
@@ -462,49 +512,106 @@ export default function VietcombankPublicPortal() {
           <Button type="text" style={{ fontWeight: 600, color: '#005030' }} onClick={() => document.getElementById('news-section')?.scrollIntoView({ behavior: 'smooth' })}>
             {t('portal.navNews')}
           </Button>
-          <Button
-            type="default"
-            size="large"
-            icon={<UserOutlined />}
-            style={{
-              borderColor: '#005030',
-              color: '#005030',
-              fontWeight: 600,
-            }}
-            href="#/customer/login"
-          >
-            {t('portal.btnLoginCustomer')}
-          </Button>
-          <Button
-            type="dashed"
-            size="large"
-            style={{
-              borderColor: '#00482B',
-              color: '#00482B',
-              fontWeight: 600,
-            }}
-            href="#/customer/register"
-          >
-            {t('customer.btnRegister')}
-          </Button>
-          <Button
-            type="primary"
-            size="large"
-            icon={<SendOutlined />}
-            style={{
-              background: '#73B828',
-              borderColor: '#73B828',
-              color: '#00482B',
-              fontWeight: 'bold',
-              boxShadow: '0 4px 12px rgba(115,184,40,0.4)',
-            }}
-            onClick={() => {
-              setApplySuccessData(null);
-              setApplyModalVisible(true);
-            }}
-          >
-            {t('portal.btnApplyOnline')}
-          </Button>
+
+          {isCustomerLoggedIn ? (
+            <Space size="middle">
+              {/* Nút vào Bảng điều khiển của khách hàng */}
+              <Button
+                type="primary"
+                size="large"
+                icon={<DashboardOutlined />}
+                style={{
+                  background: '#005030',
+                  borderColor: '#005030',
+                  color: '#fff',
+                  fontWeight: 700,
+                  boxShadow: '0 4px 12px rgba(0,80,48,0.3)',
+                }}
+                onClick={() => {
+                  window.location.hash = '#/customer/dashboard';
+                }}
+              >
+                {t('customer.menuDashboard') || 'Bảng điều khiển'}
+              </Button>
+
+              {/* Tên người dùng thay thế cho button đăng ký vay & mở thẻ */}
+              <Dropdown menu={{ items: customerMenuItems }} placement="bottomRight">
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    cursor: 'pointer',
+                    padding: '6px 14px',
+                    borderRadius: 24,
+                    background: '#F0FDF4',
+                    border: '1.5px solid #73B828',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  <Avatar
+                    style={{ backgroundColor: '#005030', color: '#73B828', fontWeight: 'bold' }}
+                    icon={<UserOutlined />}
+                  />
+                  <div style={{ textAlign: 'left', lineHeight: 1.2 }}>
+                    <Text strong style={{ color: '#005030', display: 'block', fontSize: 13, maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {customer?.fullName || customer?.username}
+                    </Text>
+                    <Text type="secondary" style={{ fontSize: 11, color: '#00482B' }}>
+                      {customer?.customerType === 'ENTERPRISE' ? 'Doanh nghiệp' : 'Khách hàng cá nhân'}
+                    </Text>
+                  </div>
+                  <DownOutlined style={{ fontSize: 10, color: '#005030', marginLeft: 4 }} />
+                </div>
+              </Dropdown>
+            </Space>
+          ) : (
+            <>
+              <Button
+                type="default"
+                size="large"
+                icon={<UserOutlined />}
+                style={{
+                  borderColor: '#005030',
+                  color: '#005030',
+                  fontWeight: 600,
+                }}
+                href="#/customer/login"
+              >
+                {t('portal.btnLoginCustomer')}
+              </Button>
+              <Button
+                type="dashed"
+                size="large"
+                style={{
+                  borderColor: '#00482B',
+                  color: '#00482B',
+                  fontWeight: 600,
+                }}
+                href="#/customer/register"
+              >
+                {t('customer.btnRegister')}
+              </Button>
+              <Button
+                type="primary"
+                size="large"
+                icon={<SendOutlined />}
+                style={{
+                  background: '#73B828',
+                  borderColor: '#73B828',
+                  color: '#00482B',
+                  fontWeight: 'bold',
+                  boxShadow: '0 4px 12px rgba(115,184,40,0.4)',
+                }}
+                onClick={() => {
+                  setApplySuccessData(null);
+                  setApplyModalVisible(true);
+                }}
+              >
+                {t('portal.btnApplyOnline')}
+              </Button>
+            </>
+          )}
         </Space>
       </Header>
 

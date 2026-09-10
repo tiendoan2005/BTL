@@ -45,6 +45,7 @@ public class PublicPortalController {
     private final PostRepository postRepo;
     private final ApplicationRepository applicationRepo;
     private final CustomerRepository customerRepo;
+    private final com.bank.admin.staff.StaffService staffService;
 
     // ================= DTOs =================
     public record PublicApplyRequest(
@@ -181,5 +182,14 @@ public class PublicPortalController {
             .build();
 
         return ResponseEntity.status(201).body(ApiResponse.ok("Nộp hồ sơ thành công", res));
+    }
+
+    @Operation(summary = "Khách hàng đặt lịch hẹn tại quầy qua Chatbot / Cổng điện tử")
+    @PostMapping("/appointments")
+    public ResponseEntity<ApiResponse<com.bank.admin.staff.dto.StaffDtos.AppointmentResponse>> submitAppointment(
+            @Valid @RequestBody com.bank.admin.staff.dto.StaffDtos.CreateAppointmentRequest req
+    ) {
+        var res = staffService.createAppointment(req);
+        return ResponseEntity.status(201).body(ApiResponse.ok("Đặt lịch hẹn thành công", res));
     }
 }

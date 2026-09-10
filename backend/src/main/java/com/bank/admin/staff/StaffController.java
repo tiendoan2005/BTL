@@ -145,4 +145,41 @@ public class StaffController {
     public ApiResponse<TransactionResponse> createTransaction(@Valid @RequestBody CreateTransactionRequest req) {
         return ApiResponse.ok("Thực hiện giao dịch tài chính thành công", staffService.createTransaction(req));
     }
+
+    // =========================================================================
+    // 5. QUẢN LÝ LỊCH HẸN CHATBOT (APPOINTMENT MANAGEMENT)
+    // =========================================================================
+
+    @GetMapping("/appointments")
+    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ApiResponse<PagedResponse<AppointmentResponse>> getAppointments(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ApiResponse.ok(staffService.searchAppointments(keyword, status, page, size));
+    }
+
+    @GetMapping("/appointments/stats")
+    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ApiResponse<java.util.Map<String, Long>> getAppointmentStats() {
+        return ApiResponse.ok(staffService.getAppointmentStats());
+    }
+
+    @PostMapping("/appointments")
+    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ApiResponse<AppointmentResponse> createAppointment(@Valid @RequestBody CreateAppointmentRequest req) {
+        return ApiResponse.ok("Tạo lịch hẹn thành công", staffService.createAppointment(req));
+    }
+
+    @PutMapping("/appointments/{id}/status")
+    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ApiResponse<AppointmentResponse> updateAppointmentStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateAppointmentStatusRequest req
+    ) {
+        String staffName = com.bank.admin.security.SecurityContextUtils.currentUser().getFullName();
+        return ApiResponse.ok("Cập nhật trạng thái lịch hẹn thành công", staffService.updateAppointmentStatus(id, req, staffName));
+    }
 }

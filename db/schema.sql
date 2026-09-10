@@ -378,3 +378,28 @@ CREATE TABLE IF NOT EXISTS report_exports (
     exported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
+
+-- ==========================================
+-- 8. QUẢN LÝ LỊCH HẸN CHATBOT (APPOINTMENTS)
+-- ==========================================
+
+CREATE TABLE IF NOT EXISTS chatbot_appointments (
+    appointment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    appointment_code VARCHAR(50) NOT NULL UNIQUE,
+    full_name VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NULL,
+    branch_name VARCHAR(150) NOT NULL,
+    service_type VARCHAR(150) NOT NULL,
+    appointment_date DATE NOT NULL,
+    time_slot VARCHAR(50) NOT NULL,
+    note TEXT NULL,
+    status VARCHAR(30) NOT NULL DEFAULT 'PENDING',
+    handled_by VARCHAR(100) NULL,
+    handler_note TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_appt_status (status),
+    INDEX idx_appt_phone (phone_number),
+    INDEX idx_appt_date (appointment_date)
+);
