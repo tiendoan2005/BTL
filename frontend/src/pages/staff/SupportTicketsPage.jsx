@@ -191,11 +191,13 @@ export default function SupportTicketsPage() {
       title: 'Mã Ticket',
       dataIndex: 'ticketCode',
       key: 'ticketCode',
+      width: 140,
       render: (code) => <Text strong style={{ color: '#005030' }}>{code}</Text>
     },
     {
       title: 'Khách hàng',
       key: 'customer',
+      width: 180,
       render: (_, r) => (
         <div>
           <Text strong>{r.customerName}</Text>
@@ -207,35 +209,47 @@ export default function SupportTicketsPage() {
       title: 'Tiêu đề yêu cầu',
       dataIndex: 'title',
       key: 'title',
-      render: (t) => <Text strong>{t}</Text>
+      width: 240,
+      ellipsis: true,
+      render: (t) => <Tooltip title={t} placement="topLeft"><Text strong>{t}</Text></Tooltip>
     },
     {
       title: 'Mức độ',
       dataIndex: 'priority',
       key: 'priority',
+      width: 130,
       render: renderPriority
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
+      width: 140,
       render: renderStatus
     },
     {
       title: 'Nhân viên phụ trách',
       dataIndex: 'assignedStaffName',
       key: 'assignedStaffName',
+      width: 160,
       render: (name) => name ? <Tag icon={<UserOutlined />} color="cyan">{name}</Tag> : <Text type="secondary">Chưa gán</Text>
     },
     {
       title: 'Thời gian tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (d) => d ? new Date(d).toLocaleString('vi-VN') : '—'
+      width: 160,
+      render: (d) => (
+        <span style={{ fontSize: 12, color: '#4b5563' }}>
+          {d ? new Date(d).toLocaleString('vi-VN') : '—'}
+        </span>
+      )
     },
     {
       title: 'Thao tác',
       key: 'action',
+      width: 130,
+      fixed: 'right',
       render: (_, record) => (
         <Button
           type="primary"
@@ -327,6 +341,8 @@ export default function SupportTicketsPage() {
           dataSource={data}
           rowKey="id"
           loading={loading}
+          tableLayout="fixed"
+          scroll={{ x: 1250 }}
           pagination={{
             ...pagination,
             showSizeChanger: true,

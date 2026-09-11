@@ -467,6 +467,7 @@ export default function AppointmentsPage() {
           dataSource={data}
           rowKey="id"
           loading={loading}
+          tableLayout="fixed"
           pagination={{
             current: pagination.current,
             pageSize: pagination.pageSize,

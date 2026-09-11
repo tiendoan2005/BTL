@@ -166,17 +166,24 @@ export default function AdvisoriesPage() {
     {
       title: 'Khách hàng',
       key: 'customer',
+      width: 220,
       render: (_, r) => (
         <div>
-          <Space>
-            <Text strong style={{ color: '#005030' }}>{r.customerName}</Text>
-            <Tag color={r.customerType === 'ENTERPRISE' ? 'purple' : 'geekblue'}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+            <Text strong style={{ color: '#005030', fontSize: 13 }}>{r.customerName}</Text>
+            <Tag color={r.customerType === 'ENTERPRISE' ? 'purple' : 'geekblue'} style={{ fontSize: 10, padding: '0 4px', margin: 0 }}>
               {r.customerType === 'ENTERPRISE' ? 'Doanh nghiệp' : 'Cá nhân'}
             </Tag>
-          </Space>
-          <div style={{ fontSize: 12, color: '#666', marginTop: 2 }}>
-            <PhoneOutlined style={{ marginRight: 4 }} />{r.customerPhone}
-            {r.customerEmail && <span style={{ marginLeft: 10 }}><MailOutlined style={{ marginRight: 4 }} />{r.customerEmail}</span>}
+          </div>
+          <div style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
+            <div>
+              <PhoneOutlined style={{ marginRight: 4, color: '#888' }} />{r.customerPhone}
+            </div>
+            {r.customerEmail && (
+              <div style={{ marginTop: 2 }}>
+                <MailOutlined style={{ marginRight: 4, color: '#888' }} />{r.customerEmail}
+              </div>
+            )}
           </div>
         </div>
       )
@@ -185,40 +192,89 @@ export default function AdvisoriesPage() {
       title: 'Sản phẩm tư vấn',
       dataIndex: 'productType',
       key: 'productType',
-      render: (p) => <Tag color="#005030" style={{ fontWeight: 600 }}>{p}</Tag>
+      width: 240,
+      render: (p) => (
+        <Tooltip title={p} placement="topLeft">
+          <Tag
+            color="cyan"
+            style={{
+              fontWeight: 600,
+              whiteSpace: 'normal',
+              wordBreak: 'break-word',
+              lineHeight: '18px',
+              padding: '4px 8px',
+              maxWidth: '100%',
+              display: 'inline-block',
+              margin: 0,
+              borderRadius: 4
+            }}
+          >
+            {p}
+          </Tag>
+        </Tooltip>
+      )
     },
     {
       title: 'Nội dung & Nhu cầu KH',
       dataIndex: 'notes',
       key: 'notes',
+      width: 260,
       ellipsis: true,
-      render: (text) => <Tooltip title={text}><span>{text}</span></Tooltip>
+      render: (text) => (
+        <Tooltip title={text} placement="topLeft">
+          <div
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              maxWidth: '100%',
+              color: '#374151',
+              fontSize: 13
+            }}
+          >
+            {text || '—'}
+          </div>
+        </Tooltip>
+      )
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
+      width: 150,
       render: renderStatus
     },
     {
       title: 'Chuyên viên tư vấn',
       dataIndex: 'staffName',
       key: 'staffName',
-      render: (name) => <Tag icon={<UserOutlined />} color="green">{name}</Tag>
+      width: 170,
+      render: (name) => (
+        <Tag icon={<UserOutlined />} color="green" style={{ padding: '2px 8px', borderRadius: 4 }}>
+          {name}
+        </Tag>
+      )
     },
     {
       title: 'Thời gian',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (d) => d ? new Date(d).toLocaleString('vi-VN') : '—'
+      width: 160,
+      render: (d) => (
+        <span style={{ fontSize: 12, color: '#4b5563' }}>
+          {d ? new Date(d).toLocaleString('vi-VN') : '—'}
+        </span>
+      )
     },
     {
       title: 'Thao tác',
       key: 'action',
+      width: 100,
+      fixed: 'right',
       render: (_, record) => (
         <Button
           type="link"
-          style={{ color: '#005030', fontWeight: 600 }}
+          style={{ color: '#005030', fontWeight: 600, padding: 0 }}
           onClick={() => openEditModal(record)}
         >
           Cập nhật
@@ -304,6 +360,8 @@ export default function AdvisoriesPage() {
           dataSource={data}
           rowKey="id"
           loading={loading}
+          tableLayout="fixed"
+          scroll={{ x: 1300 }}
           pagination={{
             ...pagination,
             showSizeChanger: true,

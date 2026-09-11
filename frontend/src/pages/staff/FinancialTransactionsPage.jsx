@@ -129,17 +129,20 @@ export default function FinancialTransactionsPage() {
       title: 'Mã GD (Core Banking)',
       dataIndex: 'transactionCode',
       key: 'transactionCode',
+      width: 170,
       render: (code) => <Text strong style={{ color: '#005030' }}>{code}</Text>
     },
     {
       title: 'Người gửi / Nộp tiền',
       dataIndex: 'senderCustomerName',
       key: 'senderCustomerName',
+      width: 180,
       render: (name) => <Text strong>{name}</Text>
     },
     {
       title: 'Người thụ hưởng',
       key: 'receiver',
+      width: 220,
       render: (_, r) => (
         <div>
           <Text strong>{r.receiverName}</Text>
@@ -151,6 +154,8 @@ export default function FinancialTransactionsPage() {
       title: 'Số tiền GD (VND)',
       dataIndex: 'amount',
       key: 'amount',
+      width: 160,
+      align: 'right',
       render: (amt) => (
         <Text strong style={{ color: '#005030', fontSize: 14 }}>
           {Number(amt || 0).toLocaleString('vi-VN')} ₫
@@ -161,12 +166,15 @@ export default function FinancialTransactionsPage() {
       title: 'Phí GD',
       dataIndex: 'fee',
       key: 'fee',
+      width: 110,
+      align: 'right',
       render: (f) => <Text type="secondary">{Number(f || 0).toLocaleString('vi-VN')} ₫</Text>
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
+      width: 140,
       render: (st) => (
         <Tag icon={<CheckCircleOutlined />} color="success">
           {st === 'SUCCESS' ? 'Thành công' : st}
@@ -177,13 +185,19 @@ export default function FinancialTransactionsPage() {
       title: 'Giao dịch viên',
       dataIndex: 'staffName',
       key: 'staffName',
+      width: 160,
       render: (name) => <Tag icon={<UserOutlined />} color="cyan">{name}</Tag>
     },
     {
       title: 'Thời gian',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (d) => d ? new Date(d).toLocaleString('vi-VN') : '—'
+      width: 160,
+      render: (d) => (
+        <span style={{ fontSize: 12, color: '#4b5563' }}>
+          {d ? new Date(d).toLocaleString('vi-VN') : '—'}
+        </span>
+      )
     }
   ];
 
@@ -263,6 +277,8 @@ export default function FinancialTransactionsPage() {
           dataSource={data}
           rowKey="id"
           loading={loading}
+          tableLayout="fixed"
+          scroll={{ x: 1260 }}
           pagination={{
             ...pagination,
             showSizeChanger: true,

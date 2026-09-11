@@ -171,11 +171,13 @@ export default function DisputesPage() {
       title: 'Mã tra soát',
       dataIndex: 'disputeCode',
       key: 'disputeCode',
+      width: 140,
       render: (code) => <Text strong style={{ color: '#005030' }}>{code}</Text>
     },
     {
       title: 'Khách hàng',
       key: 'customer',
+      width: 180,
       render: (_, r) => (
         <div>
           <Text strong>{r.customerName}</Text>
@@ -187,36 +189,47 @@ export default function DisputesPage() {
       title: 'Mã GD gốc',
       dataIndex: 'transactionCode',
       key: 'transactionCode',
+      width: 150,
       render: (tx) => <Tag color="geekblue">{tx}</Tag>
     },
     {
       title: 'Lý do tra soát',
       dataIndex: 'reason',
       key: 'reason',
+      width: 250,
       ellipsis: true,
-      render: (text) => <Tooltip title={text}><span>{text}</span></Tooltip>
+      render: (text) => <Tooltip title={text} placement="topLeft"><span>{text}</span></Tooltip>
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
+      width: 150,
       render: renderStatus
     },
     {
       title: 'Nhân viên xử lý',
       dataIndex: 'handlerStaffName',
       key: 'handlerStaffName',
+      width: 160,
       render: (name) => name ? <Tag icon={<UserOutlined />} color="cyan">{name}</Tag> : <Text type="secondary">Chưa gán</Text>
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (d) => d ? new Date(d).toLocaleString('vi-VN') : '—'
+      width: 160,
+      render: (d) => (
+        <span style={{ fontSize: 12, color: '#4b5563' }}>
+          {d ? new Date(d).toLocaleString('vi-VN') : '—'}
+        </span>
+      )
     },
     {
       title: 'Thao tác',
       key: 'action',
+      width: 100,
+      fixed: 'right',
       render: (_, record) => (
         <Space size="small">
           <Button
@@ -310,6 +323,8 @@ export default function DisputesPage() {
           dataSource={data}
           rowKey="id"
           loading={loading}
+          tableLayout="fixed"
+          scroll={{ x: 1200 }}
           pagination={{
             ...pagination,
             showSizeChanger: true,
