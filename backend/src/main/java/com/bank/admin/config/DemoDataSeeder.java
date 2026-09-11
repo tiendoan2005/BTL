@@ -71,7 +71,7 @@ public class DemoDataSeeder {
                 roleRepository.save(Role.builder().code("ROLE_MANAGER")
                     .name("Quản lý phê duyệt").description("Duyệt hồ sơ, hạn mức và xem báo cáo").build()));
             manager.setPermissions(new java.util.LinkedHashSet<>(java.util.List.of(
-                perms.get("APPROVE_LOAN"), perms.get("REPORT_EXPORT"), perms.get("STAFF_FINANCIAL_TX"))));
+                perms.get("APPROVE_LOAN"), perms.get("REPORT_EXPORT"))));
 
             Role staff = roleRepository.findByCode("ROLE_STAFF").orElseGet(() ->
                 roleRepository.save(Role.builder().code("ROLE_STAFF")

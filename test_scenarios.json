@@ -104,6 +104,36 @@
       "uiBehavior": "Thanh sidebar của Quản lý phê duyệt KHÔNG HIỂN THỊ menu Quản trị hệ thống/Người dùng. Nếu cố gõ URL trực tiếp, màn hình hiển thị 403 Access Denied."
     },
     {
+      "id": "TC-RBAC-03",
+      "module": "RBAC_SECURITY",
+      "title": "BẢO MẬT: Nhân viên phê duyệt gọi API Giao dịch tài chính -> Phải bị chặn 403 Forbidden",
+      "type": "SECURITY_NEGATIVE",
+      "priority": "BLOCKER",
+      "role": "MANAGER",
+      "preConditions": "Đăng nhập bằng tài khoản ql_minhtuan (ROLE_MANAGER - chỉ có quyền APPROVE_LOAN và REPORT_EXPORT)",
+      "endpoint": "GET /api/v1/staff/transactions",
+      "headers": {
+        "Authorization": "Bearer {{manager_token}}"
+      },
+      "expectedResult": "HTTP 403 FORBIDDEN. Backend Spring Security bắt @PreAuthorize('hasAnyAuthority(\"STAFF_FINANCIAL_TX\", \"ROLE_ADMIN\")') và chặn triệt để.",
+      "uiBehavior": "Menu Giao dịch tài chính ẩn hoàn toàn trên thanh điều hướng của Quản lý phê duyệt. Khi cố truy cập URL /staff/transactions sẽ nhận thông báo không có quyền."
+    },
+    {
+      "id": "TC-RBAC-04",
+      "module": "RBAC_SECURITY",
+      "title": "BẢO MẬT: Nhân viên phê duyệt gọi API Lịch hẹn Chatbot -> Phải bị chặn 403 Forbidden",
+      "type": "SECURITY_NEGATIVE",
+      "priority": "BLOCKER",
+      "role": "MANAGER",
+      "preConditions": "Đăng nhập bằng tài khoản ql_minhtuan (ROLE_MANAGER)",
+      "endpoint": "GET /api/v1/staff/appointments",
+      "headers": {
+        "Authorization": "Bearer {{manager_token}}"
+      },
+      "expectedResult": "HTTP 403 FORBIDDEN. Backend Spring Security bắt @PreAuthorize('hasAnyAuthority(\"STAFF_FINANCIAL_TX\", \"STAFF_SUPPORT_TICKET\", \"ROLE_ADMIN\")') và chặn triệt để.",
+      "uiBehavior": "Menu Lịch hẹn Chatbot ẩn hoàn toàn trên thanh điều hướng của Quản lý phê duyệt. Việc quản lý lịch hẹn thuộc thẩm quyền của Giao dịch viên."
+    },
+    {
       "id": "TC-CUST-01",
       "module": "CUSTOMER_PORTAL",
       "title": "Đăng ký tài khoản Khách hàng cá nhân trực tuyến",

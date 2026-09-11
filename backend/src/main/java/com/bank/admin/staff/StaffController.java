@@ -24,7 +24,7 @@ public class StaffController {
     // 0. DANH SÁCH KHÁCH HÀNG (Dùng cho dropdown / chọn trong các form)
     // =========================================================================
     @GetMapping("/customers")
-    @PreAuthorize("hasAnyRole('STAFF', 'MANAGER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
     public ApiResponse<List<Customer>> listAllCustomers() {
         return ApiResponse.ok(customerRepository.findAll());
     }
@@ -34,7 +34,7 @@ public class StaffController {
     // =========================================================================
 
     @GetMapping("/disputes")
-    @PreAuthorize("hasAnyAuthority('STAFF_DISPUTE_HANDLE', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_DISPUTE_HANDLE', 'ROLE_ADMIN')")
     public ApiResponse<PagedResponse<DisputeResponse>> getDisputes(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String status,
@@ -45,13 +45,13 @@ public class StaffController {
     }
 
     @PostMapping("/disputes")
-    @PreAuthorize("hasAnyAuthority('STAFF_DISPUTE_HANDLE', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_DISPUTE_HANDLE', 'ROLE_ADMIN')")
     public ApiResponse<DisputeResponse> createDispute(@Valid @RequestBody CreateDisputeRequest req) {
         return ApiResponse.ok("Tạo yêu cầu tra soát thành công", staffService.createDispute(req));
     }
 
     @PostMapping("/disputes/{id}/process")
-    @PreAuthorize("hasAnyAuthority('STAFF_DISPUTE_HANDLE', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_DISPUTE_HANDLE', 'ROLE_ADMIN')")
     public ApiResponse<DisputeResponse> processDispute(
             @PathVariable Long id,
             @Valid @RequestBody ProcessDisputeRequest req
@@ -64,7 +64,7 @@ public class StaffController {
     // =========================================================================
 
     @GetMapping("/advisories")
-    @PreAuthorize("hasAnyAuthority('STAFF_CUSTOMER_ADVISORY', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_CUSTOMER_ADVISORY', 'ROLE_ADMIN')")
     public ApiResponse<PagedResponse<AdvisoryResponse>> getAdvisories(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String status,
@@ -75,13 +75,13 @@ public class StaffController {
     }
 
     @PostMapping("/advisories")
-    @PreAuthorize("hasAnyAuthority('STAFF_CUSTOMER_ADVISORY', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_CUSTOMER_ADVISORY', 'ROLE_ADMIN')")
     public ApiResponse<AdvisoryResponse> createAdvisory(@Valid @RequestBody CreateAdvisoryRequest req) {
         return ApiResponse.ok("Ghi nhận tư vấn khách hàng thành công", staffService.createAdvisory(req));
     }
 
     @PutMapping("/advisories/{id}")
-    @PreAuthorize("hasAnyAuthority('STAFF_CUSTOMER_ADVISORY', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_CUSTOMER_ADVISORY', 'ROLE_ADMIN')")
     public ApiResponse<AdvisoryResponse> updateAdvisory(
             @PathVariable Long id,
             @Valid @RequestBody UpdateAdvisoryRequest req
@@ -94,7 +94,7 @@ public class StaffController {
     // =========================================================================
 
     @GetMapping("/tickets")
-    @PreAuthorize("hasAnyAuthority('STAFF_SUPPORT_TICKET', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_SUPPORT_TICKET', 'ROLE_ADMIN')")
     public ApiResponse<PagedResponse<TicketResponse>> getTickets(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String status,
@@ -105,19 +105,19 @@ public class StaffController {
     }
 
     @GetMapping("/tickets/{id}")
-    @PreAuthorize("hasAnyAuthority('STAFF_SUPPORT_TICKET', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_SUPPORT_TICKET', 'ROLE_ADMIN')")
     public ApiResponse<TicketResponse> getTicketDetail(@PathVariable Long id) {
         return ApiResponse.ok(staffService.getTicketDetail(id));
     }
 
     @PostMapping("/tickets")
-    @PreAuthorize("hasAnyAuthority('STAFF_SUPPORT_TICKET', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_SUPPORT_TICKET', 'ROLE_ADMIN')")
     public ApiResponse<TicketResponse> createTicket(@Valid @RequestBody CreateTicketRequest req) {
         return ApiResponse.ok("Tạo ticket hỗ trợ thành công", staffService.createTicket(req));
     }
 
     @PostMapping("/tickets/{id}/process")
-    @PreAuthorize("hasAnyAuthority('STAFF_SUPPORT_TICKET', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_SUPPORT_TICKET', 'ROLE_ADMIN')")
     public ApiResponse<TicketResponse> processTicket(
             @PathVariable Long id,
             @Valid @RequestBody ProcessTicketRequest req
@@ -130,7 +130,7 @@ public class StaffController {
     // =========================================================================
 
     @GetMapping("/transactions")
-    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'ROLE_ADMIN')")
     public ApiResponse<PagedResponse<TransactionResponse>> getTransactions(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String status,
@@ -141,7 +141,7 @@ public class StaffController {
     }
 
     @PostMapping("/transactions")
-    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'ROLE_ADMIN')")
     public ApiResponse<TransactionResponse> createTransaction(@Valid @RequestBody CreateTransactionRequest req) {
         return ApiResponse.ok("Thực hiện giao dịch tài chính thành công", staffService.createTransaction(req));
     }
@@ -151,7 +151,7 @@ public class StaffController {
     // =========================================================================
 
     @GetMapping("/appointments")
-    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET', 'ROLE_ADMIN')")
     public ApiResponse<PagedResponse<AppointmentResponse>> getAppointments(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String status,
@@ -162,19 +162,19 @@ public class StaffController {
     }
 
     @GetMapping("/appointments/stats")
-    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET', 'ROLE_ADMIN')")
     public ApiResponse<java.util.Map<String, Long>> getAppointmentStats() {
         return ApiResponse.ok(staffService.getAppointmentStats());
     }
 
     @PostMapping("/appointments")
-    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET', 'ROLE_ADMIN')")
     public ApiResponse<AppointmentResponse> createAppointment(@Valid @RequestBody CreateAppointmentRequest req) {
         return ApiResponse.ok("Tạo lịch hẹn thành công", staffService.createAppointment(req));
     }
 
     @PutMapping("/appointments/{id}/status")
-    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('STAFF_FINANCIAL_TX', 'STAFF_SUPPORT_TICKET', 'ROLE_ADMIN')")
     public ApiResponse<AppointmentResponse> updateAppointmentStatus(
             @PathVariable Long id,
             @Valid @RequestBody UpdateAppointmentStatusRequest req
