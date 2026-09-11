@@ -446,12 +446,26 @@ export default function VietcombankPublicPortal() {
   return (
     <Layout style={{ minHeight: '100vh', background: '#f8faf9' }}>
       {/* 1. TOPBAR & HEADER VIETCOMBANK */}
-      <div style={{ background: '#003820', color: '#e8f5e9', padding: '6px 48px', fontSize: 12 }}>
+      <div style={{
+        background: '#003820',
+        color: '#e8f5e9',
+        padding: '7px 48px',
+        fontSize: 12.5,
+        position: 'relative',
+        zIndex: 11,
+      }}>
         <Row justify="space-between" align="middle">
           <Col>
             <Space size="middle">
-              <span><PhoneOutlined /> {t('common.hotline')}: <b>1900 54 54 13</b></span>
-              <span><EnvironmentOutlined /> {t('common.network')}: <b>{t('common.branches')}</b></span>
+              <span style={{ color: '#e8f5e9' }}>
+                <PhoneOutlined style={{ color: '#73B828', marginRight: 4 }} />
+                {t('common.hotline')}: <b style={{ color: '#fff' }}>1900 54 54 13</b>
+              </span>
+              <span style={{ color: 'rgba(255,255,255,0.3)' }}>|</span>
+              <span style={{ color: '#e8f5e9' }}>
+                <EnvironmentOutlined style={{ color: '#73B828', marginRight: 4 }} />
+                {t('common.network')}: <b style={{ color: '#fff' }}>{t('common.branches')}</b>
+              </span>
             </Space>
           </Col>
           <Col>
@@ -472,33 +486,54 @@ export default function VietcombankPublicPortal() {
       <Header style={{
         background: '#fff',
         padding: '0 48px',
-        height: 72,
+        height: 76,
+        lineHeight: 'normal',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         boxShadow: '0 2px 8px rgba(0,56,32,0.08)',
         borderBottom: '3px solid #73B828',
+        position: 'relative',
+        zIndex: 10,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, lineHeight: 'normal' }}>
           <div style={{
             background: '#005030',
             color: '#73B828',
             fontWeight: '900',
-            fontSize: 24,
-            padding: '6px 16px',
+            fontSize: 22,
+            padding: '6px 14px',
             borderRadius: 8,
-            letterSpacing: 2,
+            letterSpacing: 1.5,
             border: '2px solid #73B828',
+            lineHeight: 1,
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 6px rgba(0,80,48,0.2)',
           }}>
             VIETCOMBANK
           </div>
-          <div>
-            <Text strong style={{ color: '#005030', fontSize: 16, display: 'block', lineHeight: 1.2 }}>
+          <div style={{ lineHeight: 1.25 }}>
+            <div style={{
+              color: '#005030',
+              fontSize: 15,
+              fontWeight: 800,
+              lineHeight: 1.25,
+              whiteSpace: 'nowrap',
+              letterSpacing: -0.2,
+            }}>
               {t('common.bankFullName')}
-            </Text>
-            <Text type="secondary" style={{ fontSize: 11 }}>
+            </div>
+            <div style={{
+              fontSize: 11,
+              color: '#667085',
+              lineHeight: 1.3,
+              marginTop: 2,
+              whiteSpace: 'nowrap',
+            }}>
               {t('common.slogan')}
-            </Text>
+            </div>
           </div>
         </div>
 
@@ -595,12 +630,13 @@ export default function VietcombankPublicPortal() {
               <Button
                 type="primary"
                 size="large"
+                className="btn-vcb-accent"
                 icon={<SendOutlined />}
                 style={{
                   background: '#73B828',
                   borderColor: '#73B828',
-                  color: '#00482B',
-                  fontWeight: 'bold',
+                  color: '#003820',
+                  fontWeight: 700,
                   boxShadow: '0 4px 12px rgba(115,184,40,0.4)',
                 }}
                 onClick={() => {
@@ -639,17 +675,19 @@ export default function VietcombankPublicPortal() {
               <Paragraph style={{ color: '#e8f5e9', fontSize: 16, lineHeight: 1.6, maxWidth: 650 }}>
                 {t('portal.heroDesc')}
               </Paragraph>
-              <Space size="middle" style={{ marginTop: 8 }}>
+              <Space size="middle" style={{ marginTop: 12 }}>
                 <Button
                   type="primary"
                   size="large"
+                  className="btn-vcb-accent"
                   style={{
                     background: '#73B828',
                     borderColor: '#73B828',
-                    color: '#00482B',
+                    color: '#003820',
                     fontWeight: 700,
                     height: 46,
                     padding: '0 28px',
+                    fontSize: 15,
                   }}
                   onClick={() => setApplyModalVisible(true)}
                 >
@@ -657,7 +695,15 @@ export default function VietcombankPublicPortal() {
                 </Button>
                 <Button
                   size="large"
-                  style={{ background: 'transparent', color: '#fff', borderColor: '#73B828', fontWeight: 600, height: 46 }}
+                  className="btn-vcb-outline-light"
+                  style={{
+                    background: 'rgba(255,255,255,0.08)',
+                    color: '#fff',
+                    borderColor: '#73B828',
+                    fontWeight: 600,
+                    height: 46,
+                    fontSize: 15,
+                  }}
                   href="#/login"
                 >
                   {t('portal.btnLoginStaff')}

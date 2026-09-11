@@ -85,17 +85,62 @@ code, pre, kbd, samp,
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.ant-btn-primary {
-  background-color: var(--vcb-primary) !important;
-  border-color: var(--vcb-primary) !important;
-  box-shadow: 0 2px 8px rgba(0, 72, 43, 0.24) !important;
+.ant-btn-primary:not(.btn-vcb-accent):not(.btn-accent) {
+  background-color: var(--vcb-primary);
+  border-color: var(--vcb-primary);
+  box-shadow: 0 2px 8px rgba(0, 72, 43, 0.24);
 }
 
-.ant-btn-primary:hover {
-  background-color: var(--vcb-dark) !important;
-  border-color: var(--vcb-dark) !important;
-  box-shadow: 0 4px 14px rgba(0, 72, 43, 0.35) !important;
+.ant-btn-primary:not(.btn-vcb-accent):not(.btn-accent):hover {
+  background-color: var(--vcb-dark);
+  border-color: var(--vcb-dark);
+  box-shadow: 0 4px 14px rgba(0, 72, 43, 0.35);
   transform: translateY(-1px);
+}
+
+/* Vietcombank Bright Accent CTA Button (Xanh lá mạ tươi sáng chuẩn VCB) */
+.btn-vcb-accent,
+.ant-btn.btn-vcb-accent,
+.ant-btn-primary.btn-vcb-accent {
+  background-color: #73B828 !important;
+  border-color: #73B828 !important;
+  color: #003820 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(115, 184, 40, 0.45) !important;
+}
+
+.btn-vcb-accent:hover,
+.ant-btn.btn-vcb-accent:hover,
+.ant-btn-primary.btn-vcb-accent:hover,
+.btn-vcb-accent:focus,
+.ant-btn.btn-vcb-accent:focus {
+  background-color: #8ae034 !important;
+  border-color: #8ae034 !important;
+  color: #002414 !important;
+  box-shadow: 0 6px 20px rgba(115, 184, 40, 0.7) !important;
+  transform: translateY(-2px);
+}
+
+.btn-vcb-outline-light,
+.ant-btn.btn-vcb-outline-light {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: #73B828 !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+}
+
+.btn-vcb-outline-light:hover,
+.ant-btn.btn-vcb-outline-light:hover {
+  background-color: rgba(115, 184, 40, 0.25) !important;
+  border-color: #8ae034 !important;
+  color: #FFFFFF !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Reset Header Line Height in Ant Design Layout */
+.ant-layout-header {
+  line-height: normal !important;
 }
 
 .ant-card {
